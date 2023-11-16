@@ -5,17 +5,16 @@ using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Entities
 {
-    public class UserRole : IBaseInfo
+    public class UserToken : IBaseInfo
     {
         public int UserId { get; set; }
 
-        public int RoleId { get; set; }
+        public string Type { get; set; }
+
+        public string Token { get; set; }
 
         [ForeignKey("UserId")]
         public User User { get; set; }
-
-        [ForeignKey("RoleId")]
-        public Role Role { get; set; }
 
         public Status Status { get; set; }
 
