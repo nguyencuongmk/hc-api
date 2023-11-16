@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HC.Foundation.Data", "Found
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HC.Foundation.Core", "Foundations\HC.Foundation.Core\HC.Foundation.Core.csproj", "{CB8621C4-F8BB-40A2-BC0D-22859E0F6F39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HC.Service.Authentication", "Services\HC.Service.Authentication\HC.Service.Authentication.csproj", "{B62BC75A-379D-43DC-8477-F1BDA4C567CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{CB8621C4-F8BB-40A2-BC0D-22859E0F6F39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB8621C4-F8BB-40A2-BC0D-22859E0F6F39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB8621C4-F8BB-40A2-BC0D-22859E0F6F39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B62BC75A-379D-43DC-8477-F1BDA4C567CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B62BC75A-379D-43DC-8477-F1BDA4C567CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B62BC75A-379D-43DC-8477-F1BDA4C567CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B62BC75A-379D-43DC-8477-F1BDA4C567CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{49238F5A-69CD-425D-A5C6-58860178EF06} = {70FF221B-044B-4EFF-B883-B3118C400D9D}
 		{CB8621C4-F8BB-40A2-BC0D-22859E0F6F39} = {70FF221B-044B-4EFF-B883-B3118C400D9D}
+		{B62BC75A-379D-43DC-8477-F1BDA4C567CB} = {30963E6E-5642-4577-B85E-0DAB791B67A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {75370070-01ED-4960-BDC8-FF4BE475958D}

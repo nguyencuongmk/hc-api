@@ -17,5 +17,7 @@ namespace HC.Foundation.Data.Entities
         public string Address { get; set; }
 
         public virtual List<UserRole> UserRoles { get; set; }
+
+        public virtual List<UserToken> UserTokens { get; set; }
     }
 }

@@ -1,0 +1,6 @@
+@HC.Service.Authentication_HostAddress = http://localhost:5111
+
+GET {{HC.Service.Authentication_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
