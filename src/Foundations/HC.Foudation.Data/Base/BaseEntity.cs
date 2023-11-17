@@ -8,15 +8,15 @@ namespace HC.Foundation.Data.Base
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
-        public Status Status { get; set; }
-
         public DateTime CreatedOn { get; set; }
 
         public DateTime UpdatedOn { get; set; }
 
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
-        public string UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
+
+        public Status Status { get; set; }
     }
 
     public class UserBaseEntity : IBaseEntity
@@ -24,14 +24,16 @@ namespace HC.Foundation.Data.Base
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
-        public UserStatus Status { get; set; }
+        public UserStatus UserStatus { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
         public DateTime UpdatedOn { get; set; }
 
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
-        public string UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; } 
+
+        public Status Status { get; set; }
     }
 }

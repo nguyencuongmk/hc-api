@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Base
 {
@@ -6,6 +7,8 @@ namespace HC.Foundation.Data.Base
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
+
+        public Status Status { get; set; }
     }
 
     public interface IBaseInfo
@@ -14,8 +17,8 @@ namespace HC.Foundation.Data.Base
 
         public DateTime UpdatedOn { get; set; }
 
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
-        public string UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
     }
 }

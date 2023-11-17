@@ -1,5 +1,4 @@
 ﻿using HC.Foundation.Data.Base;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static HC.Foundation.Core.Constants.Constants;
 
@@ -22,8 +21,8 @@ namespace HC.Foundation.Data.Entities
 
         public DateTime UpdatedOn { get; set; }
 
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
 
-        public string UpdatedBy { get; set; }
+        public string? UpdatedBy { get; set; }
     }
 }

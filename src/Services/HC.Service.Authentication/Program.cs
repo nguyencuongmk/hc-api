@@ -1,5 +1,11 @@
 using HC.Service.Authentication.Data;
+using HC.Service.Authentication.Models;
+using HC.Service.Authentication.Repositories;
+using HC.Service.Authentication.Repositories.IRepositories;
+using HC.Service.Authentication.Services.IServices;
+using HC.Service.Authentication.Services;
 using Microsoft.EntityFrameworkCore;
+using HC.Service.Authentication;
 
 public class Program
 {
@@ -18,6 +24,12 @@ public class Program
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+
+        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+        builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        builder.Services.AddScoped<IAuthService, AuthService>();
 
         var app = builder.Build();
 

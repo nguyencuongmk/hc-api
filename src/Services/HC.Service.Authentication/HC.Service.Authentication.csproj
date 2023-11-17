@@ -25,4 +25,9 @@
     <ProjectReference Include="..\..\Foundations\HC.Foudation.Data\HC.Foundation.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Responses\" />
+    <Folder Include="Models\Requests\" />
+  </ItemGroup>
+
 </Project>

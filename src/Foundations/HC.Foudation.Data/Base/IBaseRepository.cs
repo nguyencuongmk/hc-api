@@ -22,15 +22,9 @@ namespace HC.Foundation.Data.Base
 
         Task<TEntity> GetByIdAsync(string id);
 
-        Task<IReadOnlyList<TEntity>> ListAllAsync();
-
-        Task<IReadOnlyList<TEntity>> ListAsync(Expression<Func<TEntity, bool>> expression);
-
-        Task<int> AddRangeAsync(List<TEntity> entity);
+        Task<int> AddRangeAsync(List<TEntity> entities);
 
         Task UpdateAsync(TEntity entity);
-
-        Task<int> UpdateRange(TEntity[] entities);
 
         Task DeleteAsync(TEntity entity);
 
@@ -42,9 +36,7 @@ namespace HC.Foundation.Data.Base
 
         Task<TEntity> GetFirstOrDefaultAsyncNoTracking(Expression<Func<TEntity, bool>> expression);
 
-        Task DeleteRangeAsync(List<TEntity> entity);
-
-        Task<TEntity[]> AddRangeAsync(TEntity[] entity);
+        Task DeleteRangeAsync(List<TEntity> entities);
 
         Task<int> UpdateRangeAsync(List<TEntity> entities);
 
