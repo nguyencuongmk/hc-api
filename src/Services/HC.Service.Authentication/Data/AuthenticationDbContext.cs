@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HC.Service.Authentication.Data
 {
-    public class AuthenticationDbContext : DbContext
+    public class AuthenticationDbContext : BaseDbContext
     {
         public AuthenticationDbContext(DbContextOptions<AuthenticationDbContext> options) : base(options)
         {
@@ -20,42 +20,9 @@ namespace HC.Service.Authentication.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<UserToken>().HasKey(uk => new { uk.UserId, uk.Type });
-            base.OnModelCreating(modelBuilder);
-        }
-
-        public override int SaveChanges()
-        {
-            BeforeSaveChanges();
-            return base.SaveChanges();
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            BeforeSaveChanges();
-            return base.SaveChangesAsync(cancellationToken);
-        }
-
-        public void BeforeSaveChanges()
-        {
-            var entities = ChangeTracker.Entries();
-            var now = DateTime.Now;
-            foreach (var entity in entities)
-            {
-                if (entity.Entity is IBaseEntity baseEntity)
-                    switch (entity.State)
-                    {
-                        case EntityState.Added:
-                            baseEntity.CreatedOn = now;
-                            baseEntity.UpdatedOn = now;
-                            break;
-
-                        case EntityState.Modified:
-                            baseEntity.UpdatedOn = now;
-                            break;
-                    }
-            }
         }
     }
 }

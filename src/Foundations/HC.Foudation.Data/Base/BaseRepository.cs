@@ -2,15 +2,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq.Expressions;
+using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Base
 {
-    public class BaseRepository<TEntity, T> : IBaseRepository<TEntity> where TEntity : class, IBaseEntity
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class, IBaseEntity
     {
-        protected AppSettings appSettings;
-        protected IDistributedCache distributedCache;
+        private readonly BaseDbContext _context;
+        private readonly DbSet<TEntity> _db;
+        private readonly AppSettings _appSettings;
+        private readonly IDistributedCache _distributedCache;
 
         public int PageNumber { get; set; } = 1;
 
@@ -18,105 +22,130 @@ namespace HC.Foundation.Data.Base
 
         public int TotalRecords { get; set; }
 
-        public BaseRepository()
+        public BaseRepository(BaseDbContext context)
         {
-            PageNumber = 1;
-            PageSize = 10;
+            _context = context;
+            _db = _context.Set<TEntity>();
         }
 
-        public Task<TEntity> AddAsync(TEntity entity)
+        public async Task<TEntity> AddAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            var lastEntity = _db.OrderByDescending(lt => lt.Id).FirstOrDefault();
+            if (lastEntity != null)
+            {
+                entity.Id = lastEntity.Id + 1;
+                await _db.AddAsync(entity);
+            }
+            else
+            {
+                entity.Id = 1;
+                await _db.AddAsync(entity);
+            }
+
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public Task<int> AddRangeAsync(List<TEntity> entity)
+        public async Task<int> AddRangeAsync(List<TEntity> entities)
         {
-            throw new NotImplementedException();
+            _db.AddRange(entities);
+            var i = await _context.SaveChangesAsync();
+            return i;
         }
 
-        public Task<TEntity[]> AddRangeAsync(TEntity[] entity)
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await _db.Where(expression).CountAsync();
         }
 
-        public Task<int> CountAsync(Expression<Func<TEntity, bool>> expression)
+        public async Task DeleteAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            entity.Status = Status.Deleted;
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(TEntity entity)
+        public async Task DeleteRangeAsync(List<TEntity> entities)
         {
-            throw new NotImplementedException();
+            entities.ForEach(x => x.Status = Status.Deleted);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteRangeAsync(List<TEntity> entity)
+        public async Task<IList<TEntity>> FindMultiple(Expression<Func<TEntity, bool>> expression = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes = null)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = _db;
+
+            if (expression != null)
+            {
+                query = query.Where(expression);
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            if (includes != null)
+            {
+                query = includes(query);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public Task<IList<TEntity>> FindMultiple(Expression<Func<TEntity, bool>> expression = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes = null)
+        public async Task<TEntity> FindSingle(Expression<Func<TEntity, bool>> expression = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes = null)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = _db;
+
+            if (includes != null)
+            {
+                query = includes(query);
+            }
+
+            return await query.FirstOrDefaultAsync(expression);
         }
 
-        public Task<TEntity> FindSingle(Expression<Func<TEntity, bool>> expression = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes = null)
+        public async Task<List<TEntity>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _db.ToListAsync();
         }
 
-        public Task<List<TEntity>> GetAll()
+        public async Task<TEntity> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _db.FindAsync(id);
         }
 
-        public Task<TEntity> GetByIdAsync(int id)
+        public async Task<TEntity> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            return await _db.FindAsync(id);
         }
 
-        public Task<TEntity> GetByIdAsync(string id)
+        public async Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await _db.Where(expression).FirstOrDefaultAsync();
         }
 
-        public Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression)
+        public async Task<TEntity> GetFirstOrDefaultAsyncNoTracking(Expression<Func<TEntity, bool>> expression)
         {
-            throw new NotImplementedException();
+            return await _db.AsNoTracking().Where(expression).FirstOrDefaultAsync();
         }
 
-        public Task<TEntity> GetFirstOrDefaultAsyncNoTracking(Expression<Func<TEntity, bool>> expression)
+        public async Task<bool> IsExist(Expression<Func<TEntity, bool>> expression)
         {
-            throw new NotImplementedException();
+            IQueryable<TEntity> query = _db;
+            return await query.AnyAsync(expression);
         }
 
-        public Task<bool> IsExist(Expression<Func<TEntity, bool>> expression)
+        public async Task UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            _db.Update(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IReadOnlyList<TEntity>> ListAllAsync()
+        public async Task<int> UpdateRangeAsync(List<TEntity> entities)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IReadOnlyList<TEntity>> ListAsync(Expression<Func<TEntity, bool>> expression)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(TEntity entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> UpdateRange(TEntity[] entities)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<int> UpdateRangeAsync(List<TEntity> entities)
-        {
-            throw new NotImplementedException();
+            _db.UpdateRange(entities);
+            var i = await _context.SaveChangesAsync();
+            return i;
         }
     }
 }
