@@ -5,5 +5,6 @@ namespace HC.Service.Authentication.Repositories.IRepositories
 {
     public interface IUserRepository : IBaseRepository<User>
     {
+        Task<bool> Verify(string accessToken);
     }
 }

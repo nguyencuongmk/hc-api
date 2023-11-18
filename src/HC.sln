@@ -9,9 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{30
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HC.Foundation.Data", "Foundations\HC.Foudation.Data\HC.Foundation.Data.csproj", "{49238F5A-69CD-425D-A5C6-58860178EF06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HC.Foundation.Core", "Foundations\HC.Foundation.Core\HC.Foundation.Core.csproj", "{CB8621C4-F8BB-40A2-BC0D-22859E0F6F39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HC.Foundation.Cormmon", "Foundations\HC.Foundation.Core\HC.Foundation.Cormmon.csproj", "{CB8621C4-F8BB-40A2-BC0D-22859E0F6F39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HC.Service.Authentication", "Services\HC.Service.Authentication\HC.Service.Authentication.csproj", "{B62BC75A-379D-43DC-8477-F1BDA4C567CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HC.Service.Authentication", "Services\HC.Service.Authentication\HC.Service.Authentication.csproj", "{B62BC75A-379D-43DC-8477-F1BDA4C567CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

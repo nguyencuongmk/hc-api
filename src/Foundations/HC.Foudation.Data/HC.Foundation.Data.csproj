@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HC.Foundation.Core\HC.Foundation.Core.csproj" />
+    <ProjectReference Include="..\HC.Foundation.Core\HC.Foundation.Cormmon.csproj" />
   </ItemGroup>
 
 </Project>
