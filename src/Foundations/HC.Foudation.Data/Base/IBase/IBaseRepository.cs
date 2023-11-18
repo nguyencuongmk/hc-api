@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace HC.Foundation.Data.Base
+namespace HC.Foundation.Data.Base.IBase
 {
     public interface IBaseRepository<TEntity> where TEntity : class, IBaseEntity
     {

@@ -1,18 +1,17 @@
-﻿namespace HC.Foundation.Core.Constants
+﻿using System.ComponentModel;
+
+namespace HC.Foundation.Core.Constants
 {
     public static class Constants
     {
         public enum Status
         {
+            [Description("Deleted")]
             Deleted,
+            [Description("Created")]
             Created,
+            [Description("Modified")]
             Modified
-        }
-
-        public enum UserStatus
-        {
-            Inactive,
-            Active
         }
     }
 }

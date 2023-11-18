@@ -22,7 +22,7 @@ namespace HC.Service.Authentication.Data
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
-            modelBuilder.Entity<UserToken>().HasKey(uk => new { uk.UserId, uk.Type });
+            modelBuilder.Entity<UserRole>().Ignore(p => p.Id);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HC.Foundation.Data.Base.IBase;
+using Microsoft.EntityFrameworkCore;
 using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Base
