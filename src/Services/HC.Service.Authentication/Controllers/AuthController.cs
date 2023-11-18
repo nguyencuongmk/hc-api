@@ -2,7 +2,7 @@
 
 namespace HC.Service.Authentication.Controllers
 {
-    [MyAuthorize("claim")]
+    [MyAuthorize(Roles = "admin")]
     public class AuthController : ControllerBase
     {
         [HttpGet("s")]

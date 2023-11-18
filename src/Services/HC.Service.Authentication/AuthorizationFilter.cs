@@ -5,12 +5,7 @@ namespace HC.Service.Authentication
 {
     public class MyAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
-        private readonly string[] _requiredClaims;
-
-        public MyAuthorizeAttribute(params string[] claims)
-        {
-            _requiredClaims = claims;
-        }
+        public string Roles { get; set; }
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
@@ -21,12 +16,12 @@ namespace HC.Service.Authentication
                 return;
             }
 
-            var hasAllRequredClaims = _requiredClaims.All(claim => context.HttpContext.User.HasClaim(x => x.Type == claim));
-            if (!hasAllRequredClaims)
-            {
-                context.Result = new ForbidResult();
-                return;
-            }
+            //var hasAllRequredClaims = _requiredClaims.All(claim => context.HttpContext.User.HasClaim(x => x.Type == claim));
+            //if (!hasAllRequredClaims)
+            //{
+            //    context.Result = new ForbidResult();
+            //    return;
+            //}
         }
     }
 }
