@@ -1,18 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using static HC.Foundation.Core.Constants.Constants;
 
-namespace HC.Foundation.Data.Base
+namespace HC.Foundation.Data.Base.IBase
 {
-    public interface IBaseEntity : IBaseInfo
+    public interface IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         public Status Status { get; set; }
-    }
 
-    public interface IBaseInfo
-    {
         public DateTime CreatedOn { get; set; }
 
         public DateTime UpdatedOn { get; set; }

@@ -1,4 +1,5 @@
 ﻿using HC.Foundation.Core.Constants;
+using HC.Foundation.Data.Base.IBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Distributed;

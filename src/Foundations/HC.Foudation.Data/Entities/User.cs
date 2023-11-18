@@ -2,7 +2,7 @@
 
 namespace HC.Foundation.Data.Entities
 {
-    public class User : UserBaseEntity
+    public class User : BaseEntity
     {
         public string UserName { get; set; }
 
@@ -15,6 +15,8 @@ namespace HC.Foundation.Data.Entities
         public string? PhoneNumber { get; set; }
 
         public string? Address { get; set; }
+
+        public bool IsActive { get; set; }
 
         public virtual List<UserRole> UserRoles { get; set; }
 

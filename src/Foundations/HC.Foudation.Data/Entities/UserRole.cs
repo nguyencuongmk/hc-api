@@ -1,11 +1,10 @@
 ﻿using HC.Foundation.Data.Base;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Entities
 {
-    public class UserRole : IBaseInfo
+    public class UserRole : BaseEntity
     {
         public int UserId { get; set; }
 

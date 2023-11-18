@@ -4,7 +4,7 @@ using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Entities
 {
-    public class UserToken : IBaseInfo
+    public class UserToken : BaseEntity
     {
         public int UserId { get; set; }
 
