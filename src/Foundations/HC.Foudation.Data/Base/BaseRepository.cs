@@ -3,14 +3,12 @@ using HC.Foundation.Data.Base.IBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
-using System;
 using System.Linq.Expressions;
 using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Base
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class, IBaseEntity
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class, IBaseEntity, new()
     {
         private readonly BaseDbContext _context;
         private readonly DbSet<TEntity> _db;
@@ -31,20 +29,27 @@ namespace HC.Foundation.Data.Base
 
         public async Task<TEntity> AddAsync(TEntity entity)
         {
-            var lastEntity = _db.OrderByDescending(lt => lt.Id).FirstOrDefault();
-            if (lastEntity != null)
+            try
             {
-                entity.Id = lastEntity.Id + 1;
-                await _db.AddAsync(entity);
-            }
-            else
-            {
-                entity.Id = 1;
-                await _db.AddAsync(entity);
-            }
+                var lastEntity = _db.OrderByDescending(lt => lt.Id).FirstOrDefault();
 
-            await _context.SaveChangesAsync();
-            return entity;
+                if (lastEntity != null)
+                {
+                    entity.Id = lastEntity.Id + 1;
+                    await _db.AddAsync(entity);
+                }
+                else
+                {
+                    entity.Id = 1;
+                    await _db.AddAsync(entity);
+                }
+
+                return entity;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<int> AddRangeAsync(List<TEntity> entities)

@@ -16,7 +16,7 @@ namespace HC.Foundation.Data.Entities
 
         public string? Address { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = false;
 
         public virtual List<UserRole> UserRoles { get; set; }
 

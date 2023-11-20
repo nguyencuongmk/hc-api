@@ -49,7 +49,7 @@ namespace HC.Foundation.Cormmon
         [JsonProperty("heading")]
         public ResponseHeading Heading { get; set; } = new ResponseHeading
         {
-            Timestamp = DateTime.UtcNow.TimeOfDay.ToString()
+            Timestamp = DateTime.Now.TimeOfDay.ToString()
         };
 
         [JsonProperty("result")]
@@ -62,6 +62,14 @@ namespace HC.Foundation.Cormmon
 
         [JsonProperty("model_errors")]
         public List<ModelError> ModelErrors { get; set; }
+
+        public static ApiResponse GetResponseResult(ApiResponse response, int statusCode, string description = "")
+        {
+            response.Result.StatusCode = statusCode;
+            response.Result.Message = ReasonPhrases.GetReasonPhrase(statusCode);
+            response.Result.Description = description;
+            return response;
+        }
     }
 
     public class ResponseHeading

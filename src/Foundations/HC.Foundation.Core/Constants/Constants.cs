@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using HC.Foundation.Cormmon.Attributes;
+using System.ComponentModel;
 
 namespace HC.Foundation.Core.Constants
 {
@@ -14,6 +15,15 @@ namespace HC.Foundation.Core.Constants
 
             [Description("Modified")]
             Modified
+        }
+
+        public enum Role
+        {
+            [RoleInfo(Name = "Admin", Code = "ADM")]
+            Admin,
+
+            [RoleInfo(Name = "Customer", Code = "CUS")]
+            Customer
         }
 
         public static class ResponseResult
