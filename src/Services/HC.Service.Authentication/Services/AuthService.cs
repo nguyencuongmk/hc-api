@@ -7,7 +7,6 @@ using HC.Service.Authentication.Models.Requests;
 using HC.Service.Authentication.Services.IServices;
 using System.Net.Mail;
 using System.Text;
-using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Service.Authentication.Services
 {
@@ -84,7 +83,7 @@ namespace HC.Service.Authentication.Services
             user.UserRoles.Add(new UserRole
             {
                 RoleId = role.Id,
-                Status = Status.Created
+                Status = Foundation.Core.Constants.Constants.Status.Created
             });
 
             await _unitOfWork.UserRepository.AddAsync(user);
