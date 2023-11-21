@@ -29,6 +29,9 @@ public class Program
         // Config JwtOptions
         builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 
+        // Routing
+        builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
         #region Dependency Injection
 
         builder.Services.AddScoped<IRoleRepository, RoleRepository>();
