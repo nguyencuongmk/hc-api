@@ -15,6 +15,11 @@ namespace HC.Service.Authentication.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Register an account
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {

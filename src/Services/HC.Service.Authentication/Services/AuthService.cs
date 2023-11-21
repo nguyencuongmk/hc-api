@@ -21,6 +21,11 @@ namespace HC.Service.Authentication.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Register an account
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<string> Register(RegisterRequest request)
         {
             var message = string.Empty;
@@ -101,6 +106,11 @@ namespace HC.Service.Authentication.Services
             return message;
         }
 
+        /// <summary>
+        /// Email Validation
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         private bool IsValidEmail(string email)
         {
             var trimmedEmail = email.Trim();
@@ -121,7 +131,11 @@ namespace HC.Service.Authentication.Services
             }
         }
 
-        //Encode Password
+        /// <summary>
+        /// Endcode Password
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
         private (bool, string) EncodePasswordToBase64(string password)
         {
             try
@@ -137,7 +151,11 @@ namespace HC.Service.Authentication.Services
             }
         }
 
-        //Decode Password
+        /// <summary>
+        /// Decode Password
+        /// </summary>
+        /// <param name="encodedData"></param>
+        /// <returns></returns>
         private string DecodeFrom64(string encodedData)
         {
             UTF8Encoding encoder = new();
