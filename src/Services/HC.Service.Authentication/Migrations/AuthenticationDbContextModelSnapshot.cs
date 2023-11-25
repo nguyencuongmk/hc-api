@@ -60,20 +60,20 @@ namespace HC.Service.Authentication.Migrations
                             Id = 1,
                             Code = "ADM",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1066),
+                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7887),
                             Name = "Admin",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1078)
+                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7901)
                         },
                         new
                         {
                             Id = 2,
                             Code = "CUS",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1080),
+                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7903),
                             Name = "Customer",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1081)
+                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7904)
                         });
                 });
 
@@ -130,13 +130,13 @@ namespace HC.Service.Authentication.Migrations
                         {
                             Id = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1185),
+                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8055),
                             Email = "administrator@localhost.com",
                             EmailConfirmed = true,
                             IsActive = true,
-                            PasswordHash = "",
+                            PasswordHash = "Q3VvbmdOTTExIQ==",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1186),
+                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8056),
                             UserName = "Administrator"
                         });
                 });
@@ -176,9 +176,9 @@ namespace HC.Service.Authentication.Migrations
                             UserId = 1,
                             RoleId = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1203),
+                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8074),
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 12, 15, 43, 810, DateTimeKind.Local).AddTicks(1204)
+                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8075)
                         });
                 });
 

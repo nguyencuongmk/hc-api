@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace HC.Service.Authentication.Migrations
 {
     /// <inheritdoc />
@@ -105,6 +107,25 @@ namespace HC.Service.Authentication.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Code", "CreatedBy", "CreatedOn", "Name", "Status", "UpdatedBy", "UpdatedOn" },
+                values: new object[,]
+                {
+                    { 1, "ADM", "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7887), "Admin", 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7901) },
+                    { 2, "CUS", "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7903), "Customer", 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7904) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "Address", "CreatedBy", "CreatedOn", "Email", "EmailConfirmed", "IsActive", "PasswordHash", "PhoneNumber", "Status", "UpdatedBy", "UpdatedOn", "UserName" },
+                values: new object[] { 1, null, "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8055), "administrator@localhost.com", true, true, "Q3VvbmdOTTExIQ==", null, 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8056), "Administrator" });
+
+            migrationBuilder.InsertData(
+                table: "UserRoles",
+                columns: new[] { "RoleId", "UserId", "CreatedBy", "CreatedOn", "Status", "UpdatedBy", "UpdatedOn" },
+                values: new object[] { 1, 1, "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8074), 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8075) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",

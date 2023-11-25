@@ -1,4 +1,5 @@
 ﻿using HC.Foundation.Data.Entities;
+using HC.Service.Authentication.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace HC.Service.Authentication.Data
@@ -45,7 +46,7 @@ namespace HC.Service.Authentication.Data
                     UserName = "Administrator",
                     Email = "administrator@localhost.com",
                     EmailConfirmed = true,
-                    PasswordHash = "",
+                    PasswordHash = PasswordHelper.EncodePasswordToBase64("CuongNM11!").Item2,
                     IsActive = true,
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
