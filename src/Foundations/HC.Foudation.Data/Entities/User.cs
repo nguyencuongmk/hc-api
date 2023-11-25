@@ -18,8 +18,8 @@ namespace HC.Foundation.Data.Entities
 
         public bool IsActive { get; set; } = false;
 
-        public virtual List<UserRole> UserRoles { get; set; }
+        public virtual List<Role> Roles { get; set; } = [];
 
-        public virtual List<UserToken> UserTokens { get; set; }
+        public virtual List<UserToken> UserTokens { get; set; } = [];
     }
 }

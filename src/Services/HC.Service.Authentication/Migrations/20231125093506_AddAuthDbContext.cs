@@ -36,7 +36,7 @@ namespace HC.Service.Authentication.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -55,29 +55,24 @@ namespace HC.Service.Authentication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRoles",
+                name: "RoleUser",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RolesId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_RoleUser", x => new { x.RolesId, x.UsersId });
                     table.ForeignKey(
-                        name: "FK_UserRoles_Roles_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_RoleUser_Roles_RolesId",
+                        column: x => x.RolesId,
                         principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRoles_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_RoleUser_Users_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -113,24 +108,30 @@ namespace HC.Service.Authentication.Migrations
                 columns: new[] { "Id", "Code", "CreatedBy", "CreatedOn", "Name", "Status", "UpdatedBy", "UpdatedOn" },
                 values: new object[,]
                 {
-                    { 1, "ADM", "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7887), "Admin", 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7901) },
-                    { 2, "CUS", "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7903), "Customer", 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7904) }
+                    { 1, "ADM", "system", new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4142), "Admin", 1, null, new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4155) },
+                    { 2, "CUS", "system", new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158), "Customer", 1, null, new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Address", "CreatedBy", "CreatedOn", "Email", "EmailConfirmed", "IsActive", "PasswordHash", "PhoneNumber", "Status", "UpdatedBy", "UpdatedOn", "UserName" },
-                values: new object[] { 1, null, "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8055), "administrator@localhost.com", true, true, "Q3VvbmdOTTExIQ==", null, 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8056), "Administrator" });
+                values: new object[] { 1, null, "system", new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318), "administrator@localhost.com", true, true, "Q3VvbmdOTTExIQ==", null, 1, null, new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318), "Administrator" });
 
             migrationBuilder.InsertData(
-                table: "UserRoles",
-                columns: new[] { "RoleId", "UserId", "CreatedBy", "CreatedOn", "Status", "UpdatedBy", "UpdatedOn" },
-                values: new object[] { 1, 1, "system", new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8074), 1, null, new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8075) });
+                table: "RoleUser",
+                columns: new[] { "RolesId", "UsersId" },
+                values: new object[] { 1, 1 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRoles_RoleId",
-                table: "UserRoles",
-                column: "RoleId");
+                name: "IX_RoleUser_UsersId",
+                table: "RoleUser",
+                column: "UsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_UserName",
+                table: "Users",
+                column: "UserName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserTokens_UserId",
@@ -142,7 +143,7 @@ namespace HC.Service.Authentication.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserRoles");
+                name: "RoleUser");
 
             migrationBuilder.DropTable(
                 name: "UserTokens");

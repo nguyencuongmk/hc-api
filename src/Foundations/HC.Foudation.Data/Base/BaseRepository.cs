@@ -107,7 +107,7 @@ namespace HC.Foundation.Data.Base
                 query = includes(query);
             }
 
-            return await query.FirstOrDefaultAsync(expression);
+            return await query.AsNoTracking().FirstOrDefaultAsync(expression);
         }
 
         public async Task<List<TEntity>> GetAll()
@@ -141,10 +141,17 @@ namespace HC.Foundation.Data.Base
             return await query.AnyAsync(expression);
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            _db.Update(entity);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _db.Update(entity);
+                return entity;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<int> UpdateRangeAsync(List<TEntity> entities)

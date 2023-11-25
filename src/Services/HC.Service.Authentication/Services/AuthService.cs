@@ -2,12 +2,11 @@
 using HC.Foundation.Cormmon.Attributes;
 using HC.Foundation.Data.Entities;
 using HC.Service.Authentication.Data;
-using HC.Service.Authentication.Helpers;
 using HC.Service.Authentication.Models.DTOs;
 using HC.Service.Authentication.Models.Requests;
 using HC.Service.Authentication.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System.Net.Mail;
-using System.Text;
 
 namespace HC.Service.Authentication.Services
 {
@@ -53,14 +52,6 @@ namespace HC.Service.Authentication.Services
                 return message;
             }
 
-            var (isEncoded, passwordHash) = PasswordHelper.EncodePasswordToBase64(registerDTO.Password);
-
-            if (!isEncoded)
-            {
-                message = passwordHash;
-                return message;
-            }
-
             var canConnectDb = await _unitOfWork.Context.Database.CanConnectAsync();
 
             if (!canConnectDb)
@@ -76,29 +67,45 @@ namespace HC.Service.Authentication.Services
             var user = new User
             {
                 UserName = registerDTO.UserName,
-                PasswordHash = passwordHash,
                 Email = registerDTO.Email,
                 PhoneNumber = registerDTO.PhoneNumber,
-                Address = registerDTO.Address,
-                UserRoles = new List<UserRole>()
-            };
+                Address = registerDTO.Address
+            };            
 
-            var roleCode = RoleInfoAttribute.ToCode(Foundation.Core.Constants.Constants.Role.Customer);
-            var role = await _unitOfWork.RoleRepository.FindSingle(x => x.Code == roleCode);
-
-            user.UserRoles.Add(new UserRole
+            try
             {
-                RoleId = role.Id,
-                Status = Foundation.Core.Constants.Constants.Status.Created
-            });
+                var roleCode = RoleInfoAttribute.ToCode(Foundation.Core.Constants.Constants.Role.Customer);
+                var role = await _unitOfWork.RoleRepository.FindSingle(x => x.Code == roleCode);
+                //user.Roles.Add(role);
 
-            await _unitOfWork.UserRepository.AddAsync(user);
+                var isUserCreated = await _unitOfWork.UserRepository.CreateAsync(user, registerDTO.Password);
 
-            var isSaved = await _unitOfWork.SaveChangesAsync();
+                if (!isUserCreated)
+                {
+                    message = Constants.Message.ERROR_CREATE_USER;
+                    return message;
+                }
 
-            if (!isSaved)
+
+                var isRoleAdded = await _unitOfWork.UserRepository.AddToRoleAsync(user, role);
+
+                if (!isRoleAdded)
+                {
+                    message = Constants.Message.ERROR_ADD_USER_ROLE;
+                    return message;
+                }
+
+                var isSaved = await _unitOfWork.SaveChangesAsync();
+
+                if (!isSaved)
+                {
+                    message = Constants.Message.ERROR_SAVE;
+                    return message;
+                }
+            }
+            catch (Exception ex)
             {
-                message = Constants.Message.ERROR_SAVE;
+                message = ex.Message;
                 return message;
             }
 

@@ -24,7 +24,7 @@ namespace HC.Foundation.Data.Base.IBase
 
         Task<int> AddRangeAsync(List<TEntity> entities);
 
-        Task UpdateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
 
         Task DeleteAsync(TEntity entity);
 

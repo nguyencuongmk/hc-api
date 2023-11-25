@@ -8,6 +8,6 @@ namespace HC.Foundation.Data.Entities
 
         public string Code { get; set; }
 
-        public virtual List<UserRole> UserRoles { get; set; }
+        public virtual List<User> Users { get; set; } = [];
     }
 }

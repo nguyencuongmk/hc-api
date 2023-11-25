@@ -9,18 +9,18 @@ namespace HC.Service.Authentication.Helpers
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public static (bool, string) EncodePasswordToBase64(string password)
+        public static string EncodePasswordToBase64(string password)
         {
             try
             {
                 byte[] encData_byte = new byte[password.Length];
                 encData_byte = Encoding.UTF8.GetBytes(password);
                 string encodedData = Convert.ToBase64String(encData_byte);
-                return (true, encodedData);
+                return encodedData;
             }
-            catch (Exception ex)
+            catch
             {
-                return (false, ex.Message);
+                return string.Empty;
             }
         }
 

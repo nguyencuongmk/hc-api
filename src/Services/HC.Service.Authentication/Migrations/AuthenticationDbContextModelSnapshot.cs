@@ -60,20 +60,20 @@ namespace HC.Service.Authentication.Migrations
                             Id = 1,
                             Code = "ADM",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7887),
+                            CreatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4142),
                             Name = "Admin",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7901)
+                            UpdatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4155)
                         },
                         new
                         {
                             Id = 2,
                             Code = "CUS",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7903),
+                            CreatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158),
                             Name = "Customer",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7904)
+                            UpdatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158)
                         });
                 });
 
@@ -119,9 +119,12 @@ namespace HC.Service.Authentication.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -130,55 +133,14 @@ namespace HC.Service.Authentication.Migrations
                         {
                             Id = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8055),
+                            CreatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318),
                             Email = "administrator@localhost.com",
                             EmailConfirmed = true,
                             IsActive = true,
                             PasswordHash = "Q3VvbmdOTTExIQ==",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8056),
+                            UpdatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318),
                             UserName = "Administrator"
-                        });
-                });
-
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1,
-                            CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8074),
-                            Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8075)
                         });
                 });
 
@@ -220,23 +182,26 @@ namespace HC.Service.Authentication.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserRole", b =>
+            modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("HC.Foundation.Data.Entities.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
 
-                    b.HasOne("HC.Foundation.Data.Entities.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
 
-                    b.Navigation("Role");
+                    b.HasKey("RolesId", "UsersId");
 
-                    b.Navigation("User");
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("RoleUser");
+
+                    b.HasData(
+                        new
+                        {
+                            RolesId = 1,
+                            UsersId = 1
+                        });
                 });
 
             modelBuilder.Entity("HC.Foundation.Data.Entities.UserToken", b =>
@@ -250,15 +215,23 @@ namespace HC.Service.Authentication.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.Role", b =>
+            modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.Navigation("UserRoles");
+                    b.HasOne("HC.Foundation.Data.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HC.Foundation.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HC.Foundation.Data.Entities.User", b =>
                 {
-                    b.Navigation("UserRoles");
-
                     b.Navigation("UserTokens");
                 });
 #pragma warning restore 612, 618
