@@ -23,6 +23,7 @@ namespace HC.Service.Authentication.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<UserRole>().Ignore(p => p.Id);
+            Initializer.SeedData(modelBuilder);
         }
     }
 }
