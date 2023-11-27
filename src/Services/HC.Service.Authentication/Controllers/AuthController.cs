@@ -38,15 +38,15 @@ namespace HC.Service.Authentication.Controllers
         /// <summary>
         /// Admin assign Role to User
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="username"></param>
         /// <param name="roleName"></param>
         /// <returns></returns>
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost("assignment-role")]
-        public async Task<IActionResult> RoleAssignment(string email, string roleName)
+        public async Task<IActionResult> RoleAssignment(string username, string roleName)
         {
             var response = new ApiResponse();
-            var errorMessage = await _authService.AssignRole(email, roleName);
+            var errorMessage = await _authService.AssignRole(username, roleName);
 
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -57,6 +57,11 @@ namespace HC.Service.Authentication.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Login User
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {

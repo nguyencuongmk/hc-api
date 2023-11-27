@@ -26,16 +26,16 @@ namespace HC.Service.Authentication.Services
         /// <summary>
         /// Assign role to User
         /// </summary>
-        /// <param name="email"></param>
+        /// <param name="username"></param>
         /// <param name="roleName"></param>
         /// <returns></returns>
-        public async Task<string> AssignRole(string email, string roleName)
+        public async Task<string> AssignRole(string username, string roleName)
         {
             #region Verify Request
 
             var message = string.Empty;
 
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(roleName))
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(roleName))
             {
                 message = Constants.Message.NOT_ENOUGH_INFO;
                 return message;
@@ -47,7 +47,7 @@ namespace HC.Service.Authentication.Services
 
             var user = await _unitOfWork.UserRepository.FindSingle
             (
-                expression: x => x.Email == email,
+                expression: x => x.UserName == username,
                 includes: q => q.Include(x => x.Roles)
             );
 
@@ -96,6 +96,11 @@ namespace HC.Service.Authentication.Services
             #endregion Business Logic
         }
 
+        /// <summary>
+        /// Login User
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         public async Task<(LoginResponse, string)> Login(LoginRequest request)
         {
             #region Verify Request
