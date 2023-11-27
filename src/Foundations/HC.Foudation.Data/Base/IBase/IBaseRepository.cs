@@ -30,7 +30,7 @@ namespace HC.Foundation.Data.Base.IBase
 
         Task<int> CountAsync(Expression<Func<TEntity, bool>> expression);
 
-        Task<bool> IsExist(Expression<Func<TEntity, bool>> expression);
+        Task<bool> IsExists(Expression<Func<TEntity, bool>> expression);
 
         Task<TEntity> GetFirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression);
 

@@ -1,6 +1,5 @@
 ﻿using HC.Foundation.Data.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using static HC.Foundation.Core.Constants.Constants;
 
 namespace HC.Foundation.Data.Entities
 {
@@ -14,15 +13,5 @@ namespace HC.Foundation.Data.Entities
 
         [ForeignKey("UserId")]
         public User User { get; set; }
-
-        public Status Status { get; set; }
-
-        public DateTime CreatedOn { get; set; }
-
-        public DateTime UpdatedOn { get; set; }
-
-        public string? CreatedBy { get; set; }
-
-        public string? UpdatedBy { get; set; }
     }
 }

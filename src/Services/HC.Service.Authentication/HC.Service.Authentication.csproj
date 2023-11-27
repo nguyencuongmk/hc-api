@@ -27,4 +27,8 @@
     <ProjectReference Include="..\..\Foundations\HC.Foudation.Data\HC.Foundation.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\DTOs\" />
+  </ItemGroup>
+
 </Project>

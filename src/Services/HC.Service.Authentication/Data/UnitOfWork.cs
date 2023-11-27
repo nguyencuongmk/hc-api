@@ -10,6 +10,7 @@ namespace HC.Service.Authentication.Data
         private readonly AuthenticationDbContext _context;
         private IUserRepository _userRepository;
         private IRoleRepository _roleRepository;
+        private IUserTokenRepository _userTokenRepository;
         private IOptions<JwtOptions> _jwtOptions;
 
         public UnitOfWork(AuthenticationDbContext context, IOptions<JwtOptions> jwtOptions)
@@ -35,6 +36,15 @@ namespace HC.Service.Authentication.Data
             {
                 _roleRepository ??= new RoleRepository(_context);
                 return _roleRepository;
+            }
+        }
+
+        public IUserTokenRepository UserTokenRepository
+        {
+            get
+            {
+                _userTokenRepository ??= new UserTokenRepository(_context);
+                return _userTokenRepository;
             }
         }
 
@@ -64,6 +74,8 @@ namespace HC.Service.Authentication.Data
         IUserRepository UserRepository { get; }
 
         IRoleRepository RoleRepository { get; }
+
+        IUserTokenRepository UserTokenRepository { get; }
 
         AuthenticationDbContext Context { get; }
 

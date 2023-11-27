@@ -107,7 +107,7 @@ namespace HC.Foundation.Data.Base
                 query = includes(query);
             }
 
-            return await query.AsNoTracking().FirstOrDefaultAsync(expression);
+            return await query.FirstOrDefaultAsync(expression);
         }
 
         public async Task<List<TEntity>> GetAll()
@@ -135,7 +135,7 @@ namespace HC.Foundation.Data.Base
             return await _db.AsNoTracking().Where(expression).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> IsExist(Expression<Func<TEntity, bool>> expression)
+        public async Task<bool> IsExists(Expression<Func<TEntity, bool>> expression)
         {
             IQueryable<TEntity> query = _db;
             return await query.AnyAsync(expression);

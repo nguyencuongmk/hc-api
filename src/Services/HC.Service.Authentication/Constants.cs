@@ -10,6 +10,10 @@
             public const string ERROR_SAVE = "An error occurred while saving data to the database";
             public const string ERROR_CREATE_USER = "An error occurred while creating new user";
             public const string ERROR_ADD_USER_ROLE = "An error occurred while assigning role to user";
+            public const string NOT_EXISTS_USER = "User does not exists";
+            public const string NOT_EXISTS_ROLE = "Role does not exists";
+            public const string GRANTED_ROLE = "Role has been granted to user";
+            public const string LOGIN_FAILED = "Username or Password is invalid";
         }
     }
 }
