@@ -71,7 +71,7 @@ namespace HC.Service.Authentication.Controllers
             
             if (currentUser != null && currentUser.Identity.IsAuthenticated)
             {
-                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, "You are already logged in");
+                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, Constants.Message.ACCOUNT_LOCKED);
                 return BadRequest(response);
             }
 

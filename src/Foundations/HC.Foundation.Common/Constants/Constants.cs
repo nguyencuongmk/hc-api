@@ -31,14 +31,5 @@ namespace HC.Foundation.Common.Constants
             AccessToken,
             RefreshToken
         }
-
-        public static class ResponseResult
-        {
-            public static class Description
-            {
-                public const string NO_PERMISSION = "No permission";
-                public const string TOKEN_INVALID = "Token is invalid";
-            }
-        }
     }
 }

@@ -27,7 +27,7 @@ namespace HC.Service.Authentication
 
                 if (user == null || !user.Identity.IsAuthenticated)
                 {
-                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Foundation.Common.Constants.Constants.ResponseResult.Description.TOKEN_INVALID);
+                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Constants.Message.TOKEN_INVALID);
 
                     context.Result = new JsonResult(response)
                     {
@@ -60,7 +60,7 @@ namespace HC.Service.Authentication
 
                 if (!isRolePermission)
                 {
-                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Foundation.Common.Constants.Constants.ResponseResult.Description.NO_PERMISSION);
+                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Constants.Message.NO_PERMISSION);
 
                     context.Result = new JsonResult(response)
                     {
