@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
 
-namespace HC.Foundation.Core.Extensions
+namespace HC.Foundation.Common.Extensions
 {
     public static class ObjectExtension
     {

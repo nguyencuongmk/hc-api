@@ -11,6 +11,8 @@ namespace HC.Foundation.Data.Entities
 
         public string Token { get; set; }
 
+        public DateTime ExpiredTime { get; set; }
+
         [ForeignKey("UserId")]
         public User User { get; set; }
     }

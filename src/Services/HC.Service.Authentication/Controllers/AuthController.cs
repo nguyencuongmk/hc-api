@@ -1,7 +1,8 @@
-﻿using HC.Foundation.Cormmon;
+﻿using HC.Foundation.Common;
 using HC.Service.Authentication.Models.Requests;
 using HC.Service.Authentication.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Service.Authentication.Controllers
 {
@@ -41,7 +42,7 @@ namespace HC.Service.Authentication.Controllers
         /// <param name="username"></param>
         /// <param name="roleName"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Role.Admin)]
         [HttpPost("assignment-role")]
         public async Task<IActionResult> RoleAssignment(string username, string roleName)
         {
@@ -66,6 +67,14 @@ namespace HC.Service.Authentication.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var response = new ApiResponse();
+            var currentUser = HttpContext.User;
+            
+            if (currentUser != null && currentUser.Identity.IsAuthenticated)
+            {
+                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, "You are already logged in");
+                return BadRequest(response);
+            }
+
             var loginResponse = await _authService.Login(request);
 
             if (!string.IsNullOrEmpty(loginResponse.Item2))

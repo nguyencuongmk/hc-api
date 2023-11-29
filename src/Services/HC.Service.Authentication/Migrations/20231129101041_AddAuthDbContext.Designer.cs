@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HC.Service.Authentication.Migrations
 {
     [DbContext(typeof(AuthenticationDbContext))]
-    [Migration("20231125093506_AddAuthDbContext")]
+    [Migration("20231129101041_AddAuthDbContext")]
     partial class AddAuthDbContext
     {
         /// <inheritdoc />
@@ -28,7 +28,10 @@ namespace HC.Service.Authentication.Migrations
             modelBuilder.Entity("HC.Foundation.Data.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -63,27 +66,30 @@ namespace HC.Service.Authentication.Migrations
                             Id = 1,
                             Code = "ADM",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4142),
+                            CreatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4231),
                             Name = "Admin",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4155)
+                            UpdatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4245)
                         },
                         new
                         {
                             Id = 2,
                             Code = "CUS",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158),
+                            CreatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4248),
                             Name = "Customer",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158)
+                            UpdatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4249)
                         });
                 });
 
             modelBuilder.Entity("HC.Foundation.Data.Entities.User", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -101,7 +107,7 @@ namespace HC.Service.Authentication.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
@@ -136,13 +142,13 @@ namespace HC.Service.Authentication.Migrations
                         {
                             Id = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318),
+                            CreatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4445),
                             Email = "administrator@localhost.com",
                             EmailConfirmed = true,
-                            IsActive = true,
+                            IsLocked = false,
                             PasswordHash = "Q3VvbmdOTTExIQ==",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318),
+                            UpdatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4446),
                             UserName = "Administrator"
                         });
                 });
@@ -150,12 +156,18 @@ namespace HC.Service.Authentication.Migrations
             modelBuilder.Entity("HC.Foundation.Data.Entities.UserToken", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiredTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")

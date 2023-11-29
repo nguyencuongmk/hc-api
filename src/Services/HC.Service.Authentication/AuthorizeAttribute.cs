@@ -1,27 +1,33 @@
-﻿using HC.Foundation.Cormmon;
-using HC.Service.Authentication.Repositories.IRepositories;
+﻿using HC.Foundation.Common;
+using HC.Foundation.Common.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.IdentityModel.Tokens.Jwt;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Service.Authentication
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class AuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
+    public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
-        public string Roles { get; set; }
+        private readonly IList<Role> _roles;
 
-        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        public AuthorizeAttribute(params Role[] roles)
+        {
+            _roles = roles ?? [];
+        }
+
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
             ApiResponse response = new ApiResponse();
 
             try
             {
-                var token = context.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer", "").Trim();
+                var isRolePermission = false;
+                var user = context.HttpContext.User;
 
-                if (string.IsNullOrEmpty(token))
+                if (user == null || !user.Identity.IsAuthenticated)
                 {
-                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Foundation.Core.Constants.Constants.ResponseResult.Description.TOKEN_EMPTY);
+                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Foundation.Common.Constants.Constants.ResponseResult.Description.TOKEN_INVALID);
 
                     context.Result = new JsonResult(response)
                     {
@@ -31,32 +37,35 @@ namespace HC.Service.Authentication
                     return;
                 }
 
-                var jst = new JwtSecurityToken(token);
-
-                if (jst == null || jst.ValidFrom > DateTime.UtcNow || jst.ValidTo < DateTime.UtcNow)
+                if (_roles.Any())
                 {
-                    response = ApiResponse.GetResponseResult(response,StatusCodes.Status401Unauthorized, Foundation.Core.Constants.Constants.ResponseResult.Description.TOKEN_EXPIRED);
-
-                    context.Result = new JsonResult(response)
+                    foreach (var role in _roles)
                     {
-                        StatusCode = StatusCodes.Status401Unauthorized
-                    };
-
-                    return;
+                        var roleName = RoleInfoAttribute.ToName(role);
+                        if (user.IsInRole(roleName))
+                        {
+                            isRolePermission = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    var roleName = RoleInfoAttribute.ToName(Role.Admin);
+                    if (user.IsInRole(roleName))
+                    {
+                        isRolePermission = true;
+                    }
                 }
 
-                var valid = await ValidateToken(context, token);
-
-                if (!valid)
+                if (!isRolePermission)
                 {
-                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Foundation.Core.Constants.Constants.ResponseResult.Description.TOKEN_INVALID);
+                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Foundation.Common.Constants.Constants.ResponseResult.Description.NO_PERMISSION);
 
                     context.Result = new JsonResult(response)
                     {
                         StatusCode = StatusCodes.Status401Unauthorized
                     };
-
-                    return;
                 }
             }
             catch (Exception ex)
@@ -70,17 +79,6 @@ namespace HC.Service.Authentication
 
                 return;
             }
-        }
-
-        private async Task<bool> ValidateToken(AuthorizationFilterContext context, string token)
-        {
-            bool isValidToken = false;
-            var userRepository = context.HttpContext.RequestServices.GetService(typeof(IUserRepository)) as IUserRepository;
-            if (userRepository != null)
-            {
-                isValidToken = await userRepository.Verify(token);
-            }
-            return isValidToken;
         }
     }
 }

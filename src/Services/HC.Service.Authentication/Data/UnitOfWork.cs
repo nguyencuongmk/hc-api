@@ -49,24 +49,6 @@ namespace HC.Service.Authentication.Data
         }
 
         public void Dispose() => _context.Dispose();
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                    return true;
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    return false;
-                }
-            }
-        }
     }
 
     public interface IUnitOfWork : IDisposable
@@ -78,7 +60,5 @@ namespace HC.Service.Authentication.Data
         IUserTokenRepository UserTokenRepository { get; }
 
         AuthenticationDbContext Context { get; }
-
-        Task<bool> SaveChangesAsync();
     }
 }

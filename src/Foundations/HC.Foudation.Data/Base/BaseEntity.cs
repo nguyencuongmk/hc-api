@@ -1,12 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using HC.Foundation.Data.Base.IBase;
-using static HC.Foundation.Core.Constants.Constants;
+﻿using HC.Foundation.Data.Base.IBase;
+using System.ComponentModel.DataAnnotations;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Foundation.Data.Base
 {
     public class BaseEntity : IBaseEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int Id { get; set; }
 
         public DateTime CreatedOn { get; set; }

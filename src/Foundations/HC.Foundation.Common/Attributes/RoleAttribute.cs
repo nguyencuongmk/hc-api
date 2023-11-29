@@ -1,6 +1,6 @@
-﻿using static HC.Foundation.Core.Constants.Constants;
+﻿using static HC.Foundation.Common.Constants.Constants;
 
-namespace HC.Foundation.Cormmon.Attributes
+namespace HC.Foundation.Common.Attributes
 {
     public class RoleInfoAttribute : Attribute
     {

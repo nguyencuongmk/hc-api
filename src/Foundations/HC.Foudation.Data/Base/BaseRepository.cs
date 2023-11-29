@@ -1,10 +1,10 @@
-﻿using HC.Foundation.Core.Constants;
+﻿using HC.Foundation.Common.Constants;
 using HC.Foundation.Data.Base.IBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Linq.Expressions;
-using static HC.Foundation.Core.Constants.Constants;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Foundation.Data.Base
 {
@@ -31,19 +31,10 @@ namespace HC.Foundation.Data.Base
         {
             try
             {
-                var lastEntity = _db.OrderByDescending(lt => lt.Id).FirstOrDefault();
-
-                if (lastEntity != null)
-                {
-                    entity.Id = lastEntity.Id + 1;
-                    await _db.AddAsync(entity);
-                }
-                else
-                {
-                    entity.Id = 1;
-                    await _db.AddAsync(entity);
-                }
-
+                _context.ChangeTracker.AutoDetectChangesEnabled = false;
+                _db.Add(entity);
+                await _context.SaveChangesAsync();
+                _context.ChangeTracker.AutoDetectChangesEnabled = true;
                 return entity;
             }
             catch
@@ -55,8 +46,7 @@ namespace HC.Foundation.Data.Base
         public async Task<int> AddRangeAsync(List<TEntity> entities)
         {
             _db.AddRange(entities);
-            var i = await _context.SaveChangesAsync();
-            return i;
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<int> CountAsync(Expression<Func<TEntity, bool>> expression)
@@ -146,6 +136,7 @@ namespace HC.Foundation.Data.Base
             try
             {
                 _db.Update(entity);
+                await _context.SaveChangesAsync();
                 return entity;
             }
             catch
@@ -157,8 +148,7 @@ namespace HC.Foundation.Data.Base
         public async Task<int> UpdateRangeAsync(List<TEntity> entities)
         {
             _db.UpdateRange(entities);
-            var i = await _context.SaveChangesAsync();
-            return i;
+            return await _context.SaveChangesAsync();
         }
     }
 }

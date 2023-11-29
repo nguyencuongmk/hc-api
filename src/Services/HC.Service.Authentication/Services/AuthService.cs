@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HC.Foundation.Cormmon.Attributes;
+using HC.Foundation.Common.Attributes;
 using HC.Foundation.Data.Entities;
 using HC.Service.Authentication.Data;
 using HC.Service.Authentication.Helpers;
@@ -7,6 +7,7 @@ using HC.Service.Authentication.Models.Requests;
 using HC.Service.Authentication.Models.Responses;
 using HC.Service.Authentication.Services.IServices;
 using Microsoft.EntityFrameworkCore;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Service.Authentication.Services
 {
@@ -77,13 +78,13 @@ namespace HC.Service.Authentication.Services
                         return message;
                     }
 
-                    var isSaved = await _unitOfWork.SaveChangesAsync();
+                    //var isSaved = await _unitOfWork.SaveChangesAsync();
 
-                    if (!isSaved)
-                    {
-                        message = Constants.Message.ERROR_SAVE;
-                        return message;
-                    }
+                    //if (!isSaved)
+                    //{
+                    //    message = Constants.Message.ERROR_SAVE;
+                    //    return message;
+                    //}
                 }
             }
             else
@@ -120,7 +121,7 @@ namespace HC.Service.Authentication.Services
 
             var user = await _unitOfWork.UserRepository.FindSingle
             (
-                expression: x => x.UserName == request.UserName,
+                expression: x => x.UserName == request.UserName && x.Status != Status.Deleted,
                 includes: q => q.Include(x => x.Roles).Include(x => x.UserTokens)
             );
             var isValid = _unitOfWork.UserRepository.CheckPassword(user, request.Password);
@@ -131,45 +132,74 @@ namespace HC.Service.Authentication.Services
                 return (response, message);
             }
 
-            var roles = _unitOfWork.UserRepository.GetRoles(user);
-            var accessToken = _jwtTokenGenerator.GenerateToken(user, roles);
+            if (user.IsLocked)
+            {
+                message = Constants.Message.ACCOUNT_LOCKED;
+                return (response, message);
+            }
 
-            if (string.IsNullOrEmpty(accessToken))
+            if (!user.EmailConfirmed)
+            {
+                message = Constants.Message.EMAIL_NOT_YET_CONFIRMED;
+                return (response, message);
+            }
+
+            var roles = _unitOfWork.UserRepository.GetRoles(user);
+            var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roles);
+            var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+
+            if (string.IsNullOrEmpty(accessToken.Item1) || string.IsNullOrEmpty(refreshToken.Item1))
             {
                 message = Constants.Message.LOGIN_FAILED;
                 return (response, message);
             }
 
-            var userToken = new UserToken();
+            User result;
 
             if (user.UserTokens.Count == 0)
             {
-                userToken = new UserToken 
-                { 
-                    Type = "ACT",
-                    Token = accessToken,
-                    UserId = user.Id,
+                var listToken = new List<UserToken>()
+                {
+                    new UserToken
+                    {
+                        Type = "ACT",
+                        Token = accessToken.Item1,
+                        UserId = user.Id,
+                        ExpiredTime = accessToken.Item2
+                    },
+                    new UserToken
+                    {
+                        Type = "RFT",
+                        Token = refreshToken.Item1,
+                        UserId = user.Id,
+                        ExpiredTime = refreshToken.Item2
+                    }
                 };
 
-                await _unitOfWork.UserTokenRepository.AddAsync(userToken);
+                user.UserTokens.AddRange(listToken);
+                result = await _unitOfWork.UserRepository.UpdateAsync(user);
             }
             else
             {
-                userToken = await _unitOfWork.UserTokenRepository.FindSingle(x => x.UserId == user.Id && x.Type == "ACT");
-                userToken.Token = accessToken;
-                var isAdded = await _unitOfWork.UserRepository.AddToUserTokenAsync(user, userToken);
-            }
+                var userAccessToken = user.UserTokens.FirstOrDefault(x => x.Type == "ACT");
+                var userRefreshToken = user.UserTokens.FirstOrDefault(x => x.Type == "RFT");
 
-            var isSaved = await _unitOfWork.SaveChangesAsync();
+                if (userAccessToken == null || userRefreshToken == null)
+                {
+                    message = Constants.Message.LOGIN_FAILED;
+                    return (response, message);
+                }
 
-            if (!isSaved)
-            {
-                message = Constants.Message.ERROR_SAVE;
-                return (response, message);
+                userAccessToken.Token = accessToken.Item1;
+                userAccessToken.ExpiredTime = accessToken.Item2;
+                userRefreshToken.Token = refreshToken.Item1;
+                userRefreshToken.ExpiredTime = refreshToken.Item2;
+                result = await _unitOfWork.UserRepository.UpdateAsync(user);
             }
 
             response.UserName = user.UserName;
-            response.AccessToken = accessToken;
+            response.AccessToken = accessToken.Item1;
+            response.RefreshToken = refreshToken.Item1;
 
             return (response, message);
 
@@ -221,8 +251,8 @@ namespace HC.Service.Authentication.Services
 
             try
             {
-                var roleCode = RoleInfoAttribute.ToCode(Foundation.Core.Constants.Constants.Role.Customer);
-                var role = await _unitOfWork.RoleRepository.FindSingle(x => x.Code == roleCode && x.Status != Foundation.Core.Constants.Constants.Status.Deleted);
+                var roleCode = RoleInfoAttribute.ToCode(Foundation.Common.Constants.Constants.Role.Customer);
+                var role = await _unitOfWork.RoleRepository.FindSingle(x => x.Code == roleCode && x.Status != Status.Deleted);
 
                 if (role != null)
                 {
@@ -237,13 +267,13 @@ namespace HC.Service.Authentication.Services
                     return message;
                 }
 
-                var isSaved = await _unitOfWork.SaveChangesAsync();
+                //var isSaved = await _unitOfWork.SaveChangesAsync();
 
-                if (!isSaved)
-                {
-                    message = Constants.Message.ERROR_SAVE;
-                    return message;
-                }
+                //if (!isSaved)
+                //{
+                //    message = Constants.Message.ERROR_SAVE;
+                //    return message;
+                //}
             }
             catch (Exception ex)
             {

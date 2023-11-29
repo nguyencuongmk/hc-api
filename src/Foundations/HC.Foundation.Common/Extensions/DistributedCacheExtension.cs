@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 
-namespace HC.Foundation.Core.Extensions
+namespace HC.Foundation.Common.Extensions
 {
     public static class DistributedCacheExtension
     {

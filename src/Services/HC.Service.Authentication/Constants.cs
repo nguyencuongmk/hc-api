@@ -14,6 +14,8 @@
             public const string NOT_EXISTS_ROLE = "Role does not exists";
             public const string GRANTED_ROLE = "Role has been granted to user";
             public const string LOGIN_FAILED = "Username or Password is invalid";
+            public const string ACCOUNT_LOCKED = "Account is locked";
+            public const string EMAIL_NOT_YET_CONFIRMED = "Account has not been confirmed by email";
         }
     }
 }

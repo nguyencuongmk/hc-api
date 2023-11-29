@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using static HC.Foundation.Core.Constants.Constants;
+﻿using System.ComponentModel.DataAnnotations;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Foundation.Data.Base.IBase
 {
     public interface IBaseEntity
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key]
         public int Id { get; set; }
 
         public Status Status { get; set; }

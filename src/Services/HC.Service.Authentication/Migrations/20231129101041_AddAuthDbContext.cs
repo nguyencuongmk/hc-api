@@ -17,7 +17,8 @@ namespace HC.Service.Authentication.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -35,14 +36,15 @@ namespace HC.Service.Authentication.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsLocked = table.Column<bool>(type: "bit", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -82,15 +84,17 @@ namespace HC.Service.Authentication.Migrations
                 name: "UserTokens",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
+                    ExpiredTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,14 +112,14 @@ namespace HC.Service.Authentication.Migrations
                 columns: new[] { "Id", "Code", "CreatedBy", "CreatedOn", "Name", "Status", "UpdatedBy", "UpdatedOn" },
                 values: new object[,]
                 {
-                    { 1, "ADM", "system", new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4142), "Admin", 1, null, new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4155) },
-                    { 2, "CUS", "system", new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158), "Customer", 1, null, new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4158) }
+                    { 1, "ADM", "system", new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4231), "Admin", 1, null, new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4245) },
+                    { 2, "CUS", "system", new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4248), "Customer", 1, null, new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4249) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Address", "CreatedBy", "CreatedOn", "Email", "EmailConfirmed", "IsActive", "PasswordHash", "PhoneNumber", "Status", "UpdatedBy", "UpdatedOn", "UserName" },
-                values: new object[] { 1, null, "system", new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318), "administrator@localhost.com", true, true, "Q3VvbmdOTTExIQ==", null, 1, null, new DateTime(2023, 11, 25, 16, 35, 5, 715, DateTimeKind.Local).AddTicks(4318), "Administrator" });
+                columns: new[] { "Id", "Address", "CreatedBy", "CreatedOn", "Email", "EmailConfirmed", "IsLocked", "PasswordHash", "PhoneNumber", "Status", "UpdatedBy", "UpdatedOn", "UserName" },
+                values: new object[] { 1, null, "system", new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4445), "administrator@localhost.com", true, false, "Q3VvbmdOTTExIQ==", null, 1, null, new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4446), "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "RoleUser",

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.WebUtilities;
 using Newtonsoft.Json;
 
-namespace HC.Foundation.Cormmon
+namespace HC.Foundation.Common
 {
     public class ApiResponse
     {

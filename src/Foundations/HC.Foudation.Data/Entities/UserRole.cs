@@ -1,6 +1,6 @@
 ﻿using HC.Foundation.Data.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using static HC.Foundation.Core.Constants.Constants;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Foundation.Data.Entities
 {

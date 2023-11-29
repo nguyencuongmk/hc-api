@@ -20,7 +20,7 @@ namespace HC.Service.Authentication.Data
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
                     CreatedBy = "system",
-                    Status = Foundation.Core.Constants.Constants.Status.Created
+                    Status = Foundation.Common.Constants.Constants.Status.Created
                 },
                 new Role
                 {
@@ -30,7 +30,7 @@ namespace HC.Service.Authentication.Data
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
                     CreatedBy = "system",
-                    Status = Foundation.Core.Constants.Constants.Status.Created
+                    Status = Foundation.Common.Constants.Constants.Status.Created
                 }
             );
 
@@ -47,11 +47,11 @@ namespace HC.Service.Authentication.Data
                     Email = "administrator@localhost.com",
                     EmailConfirmed = true,
                     PasswordHash = PasswordHelper.EncodePasswordToBase64("CuongNM11!"),
-                    IsActive = true,
+                    IsLocked = false,
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
                     CreatedBy = "system",
-                    Status = Foundation.Core.Constants.Constants.Status.Created
+                    Status = Foundation.Common.Constants.Constants.Status.Created
                 }
             );
 
@@ -70,7 +70,7 @@ namespace HC.Service.Authentication.Data
             //        CreatedOn = DateTime.Now,
             //        UpdatedOn = DateTime.Now,
             //        CreatedBy = "system",
-            //        Status = Foundation.Core.Constants.Constants.Status.Created
+            //        Status = Foundation.Common.Constants.Constants.Status.Created
             //    }
             //);
 

@@ -16,7 +16,7 @@ namespace HC.Foundation.Data.Entities
 
         public string? Address { get; set; }
 
-        public bool IsActive { get; set; } = false;
+        public bool IsLocked { get; set; } = false;
 
         public virtual List<Role> Roles { get; set; } = [];
 

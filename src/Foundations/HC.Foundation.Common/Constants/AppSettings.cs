@@ -1,4 +1,4 @@
-﻿namespace HC.Foundation.Core.Constants
+﻿namespace HC.Foundation.Common.Constants
 {
     public class AppSettings
     {
