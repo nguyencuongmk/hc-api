@@ -1,6 +1,6 @@
 ﻿using HC.Foundation.Data.Entities;
-using HC.Service.Authentication.Models;
 using HC.Service.Authentication.Services.IServices;
+using HC.Service.Authentication.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -12,11 +12,11 @@ namespace HC.Service.Authentication.Services
 {
     public class JwtTokenGenerator : IJwtTokenGenerator
     {
-        private readonly JwtOptions _jwtOptions;
+        private readonly AppSettings _appSettings;
 
-        public JwtTokenGenerator(IOptions<JwtOptions> jwtOptions)
+        public JwtTokenGenerator(IOptions<AppSettings> appSettings)
         {
-            _jwtOptions = jwtOptions.Value;
+            _appSettings = appSettings.Value;
         }
 
         public (string, DateTime) GenerateAccessToken(User user, IEnumerable<string> roles)
@@ -24,7 +24,7 @@ namespace HC.Service.Authentication.Services
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.UTF8.GetBytes(_jwtOptions.Secret);
+                var key = Encoding.UTF8.GetBytes(_appSettings.JwtSettings.Secret);
                 var claimList = new List<Claim>
                 {
                     new(JwtRegisteredClaimNames.Email,user.Email),
@@ -37,8 +37,8 @@ namespace HC.Service.Authentication.Services
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Audience = _jwtOptions.Audience,
-                    Issuer = _jwtOptions.Issuer,
+                    Audience = _appSettings.JwtSettings.Audience,
+                    Issuer = _appSettings.JwtSettings.Issuer,
                     Subject = new ClaimsIdentity(claimList),
                     Expires = expires,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
@@ -75,17 +75,17 @@ namespace HC.Service.Authentication.Services
                 if (jwtToken == null)
                     return null;
 
-                var symmetricKey = Encoding.UTF8.GetBytes(_jwtOptions.Secret);
+                var symmetricKey = Encoding.UTF8.GetBytes(_appSettings.JwtSettings.Secret);
                 var validationParameters = new TokenValidationParameters()
                 {
                     RequireExpirationTime = true,
                     ValidateIssuer = true,
-                    ValidIssuer = _jwtOptions.Issuer,
+                    ValidIssuer = _appSettings.JwtSettings.Issuer,
                     IssuerSigningKey = new SymmetricSecurityKey(symmetricKey),
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(0),
                     ValidateAudience = true,
-                    ValidAudience = _jwtOptions.Audience,
+                    ValidAudience = _appSettings.JwtSettings.Audience,
                 };
 
                 var principal = jwtTokenHandler.ValidateToken(accessToken, validationParameters, out SecurityToken validateToken);

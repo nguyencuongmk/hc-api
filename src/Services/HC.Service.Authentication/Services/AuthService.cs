@@ -77,14 +77,6 @@ namespace HC.Service.Authentication.Services
                         message = Constants.Message.ERROR_ADD_USER_ROLE;
                         return message;
                     }
-
-                    //var isSaved = await _unitOfWork.SaveChangesAsync();
-
-                    //if (!isSaved)
-                    //{
-                    //    message = Constants.Message.ERROR_SAVE;
-                    //    return message;
-                    //}
                 }
             }
             else
@@ -202,10 +194,10 @@ namespace HC.Service.Authentication.Services
             response.RefreshToken = refreshToken.Item1;
 
             return (response, message);
-
+            
             #endregion Business Logic
         }
-
+        
         /// <summary>
         /// Register an account
         /// </summary>
@@ -249,36 +241,36 @@ namespace HC.Service.Authentication.Services
                 Address = request.Address
             };
 
-            try
+            using (var transaction = await _unitOfWork.Context.Database.BeginTransactionAsync())
             {
-                var roleCode = RoleInfoAttribute.ToCode(Foundation.Common.Constants.Constants.Role.Customer);
-                var role = await _unitOfWork.RoleRepository.FindSingle(x => x.Code == roleCode && x.Status != Status.Deleted);
-
-                if (role != null)
+                try
                 {
-                    user.Roles.Add(role);
+                    var isUserCreated = await _unitOfWork.UserRepository.CreateAsync(user, request.Password);
+
+                    if (!isUserCreated)
+                    {
+                        message = Constants.Message.ERROR_CREATE_USER;
+                        return message;
+                    }
+
+                    var roleCode = RoleInfoAttribute.ToCode(Foundation.Common.Constants.Constants.Role.Customer);
+                    var role = await _unitOfWork.RoleRepository.FindSingle(x => x.Code == roleCode && x.Status != Status.Deleted);
+                    var isRoleAdded = await _unitOfWork.UserRepository.AddToRoleAsync(user, role);
+
+                    if (!isRoleAdded)
+                    {
+                        message = Constants.Message.ERROR_CREATE_USER;
+                        return message;
+                    }
+
+                    transaction.Commit();
                 }
-
-                var isUserCreated = await _unitOfWork.UserRepository.CreateAsync(user, request.Password);
-
-                if (!isUserCreated || user.Roles.Count == 0)
+                catch (Exception ex)
                 {
-                    message = Constants.Message.ERROR_CREATE_USER;
+                    transaction.Rollback();
+                    message = ex.Message;
                     return message;
                 }
-
-                //var isSaved = await _unitOfWork.SaveChangesAsync();
-
-                //if (!isSaved)
-                //{
-                //    message = Constants.Message.ERROR_SAVE;
-                //    return message;
-                //}
-            }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-                return message;
             }
 
             return message;

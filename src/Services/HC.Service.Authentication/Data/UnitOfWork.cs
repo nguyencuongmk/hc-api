@@ -1,6 +1,6 @@
-﻿using HC.Service.Authentication.Models;
-using HC.Service.Authentication.Repositories;
+﻿using HC.Service.Authentication.Repositories;
 using HC.Service.Authentication.Repositories.IRepositories;
+using HC.Service.Authentication.Settings;
 using Microsoft.Extensions.Options;
 
 namespace HC.Service.Authentication.Data
@@ -11,12 +11,12 @@ namespace HC.Service.Authentication.Data
         private IUserRepository _userRepository;
         private IRoleRepository _roleRepository;
         private IUserTokenRepository _userTokenRepository;
-        private IOptions<JwtOptions> _jwtOptions;
+        private IOptions<AppSettings> _appSettings;
 
-        public UnitOfWork(AuthenticationDbContext context, IOptions<JwtOptions> jwtOptions)
+        public UnitOfWork(AuthenticationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
-            _jwtOptions = jwtOptions;
+            _appSettings = appSettings;
         }
 
         public AuthenticationDbContext Context => _context;
@@ -25,7 +25,7 @@ namespace HC.Service.Authentication.Data
         {
             get
             {
-                _userRepository ??= new UserRepository(_context, _jwtOptions);
+                _userRepository ??= new UserRepository(_context, _appSettings);
                 return _userRepository;
             }
         }

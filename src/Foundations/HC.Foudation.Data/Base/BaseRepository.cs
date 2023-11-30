@@ -1,5 +1,4 @@
-﻿using HC.Foundation.Common.Constants;
-using HC.Foundation.Data.Base.IBase;
+﻿using HC.Foundation.Data.Base.IBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Distributed;
@@ -12,7 +11,6 @@ namespace HC.Foundation.Data.Base
     {
         private readonly BaseDbContext _context;
         private readonly DbSet<TEntity> _db;
-        private readonly AppSettings _appSettings;
         private readonly IDistributedCache _distributedCache;
 
         public int PageNumber { get; set; } = 1;

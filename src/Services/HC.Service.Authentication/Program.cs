@@ -6,6 +6,7 @@ using HC.Service.Authentication.Repositories;
 using HC.Service.Authentication.Repositories.IRepositories;
 using HC.Service.Authentication.Services;
 using HC.Service.Authentication.Services.IServices;
+using HC.Service.Authentication.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -49,8 +50,8 @@ public class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
-        // Config JwtOptions
-        builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+        // Config AppSettings
+        builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
         // Routing
         builder.Services.AddRouting(options => options.LowercaseUrls = true);

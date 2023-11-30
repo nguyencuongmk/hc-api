@@ -2,19 +2,19 @@
 using HC.Foundation.Data.Entities;
 using HC.Service.Authentication.Data;
 using HC.Service.Authentication.Helpers;
-using HC.Service.Authentication.Models;
 using HC.Service.Authentication.Repositories.IRepositories;
+using HC.Service.Authentication.Settings;
 using Microsoft.Extensions.Options;
 
 namespace HC.Service.Authentication.Repositories
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        private readonly JwtOptions _jwtOptions;
+        private readonly AppSettings _appSettings;
 
-        public UserRepository(AuthenticationDbContext context, IOptions<JwtOptions> jwtOptions) : base(context)
+        public UserRepository(AuthenticationDbContext context, IOptions<AppSettings> appSettings) : base(context)
         {
-            _jwtOptions = jwtOptions.Value;
+            _appSettings = appSettings.Value;
         }
 
         public async Task<bool> AddToRoleAsync(User user, Role role)
