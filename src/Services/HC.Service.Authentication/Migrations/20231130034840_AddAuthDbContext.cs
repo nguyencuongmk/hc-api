@@ -112,14 +112,14 @@ namespace HC.Service.Authentication.Migrations
                 columns: new[] { "Id", "Code", "CreatedBy", "CreatedOn", "Name", "Status", "UpdatedBy", "UpdatedOn" },
                 values: new object[,]
                 {
-                    { 1, "ADM", "system", new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4231), "Admin", 1, null, new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4245) },
-                    { 2, "CUS", "system", new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4248), "Customer", 1, null, new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4249) }
+                    { 1, "ADM", "system", new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5152), "Admin", 1, null, new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5173) },
+                    { 2, "CUS", "system", new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5176), "Customer", 1, null, new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5177) }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Address", "CreatedBy", "CreatedOn", "Email", "EmailConfirmed", "IsLocked", "PasswordHash", "PhoneNumber", "Status", "UpdatedBy", "UpdatedOn", "UserName" },
-                values: new object[] { 1, null, "system", new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4445), "administrator@localhost.com", true, false, "Q3VvbmdOTTExIQ==", null, 1, null, new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4446), "Administrator" });
+                values: new object[] { 1, null, "system", new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5378), "administrator@localhost.com", true, false, "Q3VvbmdOTTExIQ==", null, 1, null, new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5379), "Administrator" });
 
             migrationBuilder.InsertData(
                 table: "RoleUser",

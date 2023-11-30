@@ -1,8 +1,7 @@
 ﻿using HC.Foundation.Data.Base;
 using System.ComponentModel.DataAnnotations.Schema;
-using static HC.Foundation.Common.Constants.Constants;
 
-namespace HC.Foundation.Data.Entities
+namespace HC.Service.Authentication.Entities
 {
     public class UserRole : BaseEntity
     {
@@ -15,15 +14,5 @@ namespace HC.Foundation.Data.Entities
 
         [ForeignKey("RoleId")]
         public Role Role { get; set; }
-
-        public Status Status { get; set; }
-
-        public DateTime CreatedOn { get; set; }
-
-        public DateTime UpdatedOn { get; set; }
-
-        public string? CreatedBy { get; set; }
-
-        public string? UpdatedBy { get; set; }
     }
 }

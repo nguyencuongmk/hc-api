@@ -1,7 +1,7 @@
 ﻿using HC.Foundation.Data.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HC.Foundation.Data.Entities
+namespace HC.Service.Authentication.Entities
 {
     public class UserToken : BaseEntity
     {

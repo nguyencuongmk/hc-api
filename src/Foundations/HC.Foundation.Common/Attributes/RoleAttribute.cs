@@ -8,41 +8,41 @@ namespace HC.Foundation.Common.Attributes
 
         public string Code { get; set; }
 
-        public static List<Role> GetValues()
+        public static List<RoleType> GetValues()
         {
-            List<Role> es = Enum.GetValues(typeof(Role)).Cast<Role>().ToList();
+            List<RoleType> es = Enum.GetValues(typeof(RoleType)).Cast<RoleType>().ToList();
             return es;
         }
 
-        public static Role? FromName(string name)
+        public static RoleType? FromName(string name)
         {
-            IEnumerable<Role> es = Enum.GetValues(typeof(Role)).Cast<Role>();
+            IEnumerable<RoleType> es = Enum.GetValues(typeof(RoleType)).Cast<RoleType>();
             es = es.Where(e => string.Equals(e.Attribute<RoleInfoAttribute>().Name, name, StringComparison.OrdinalIgnoreCase));
-            Role? f = First(es);
+            RoleType? f = First(es);
             return f;
         }
 
-        public static string ToName(Role? e)
+        public static string ToName(RoleType? e)
         {
             return e?.Attribute<RoleInfoAttribute>().Name;
         }
 
-        public static Role? FromCode(string code)
+        public static RoleType? FromCode(string code)
         {
-            IEnumerable<Role> es = Enum.GetValues(typeof(Role)).Cast<Role>();
+            IEnumerable<RoleType> es = Enum.GetValues(typeof(RoleType)).Cast<RoleType>();
             es = es.Where(e => string.Equals(e.Attribute<RoleInfoAttribute>().Code, code, StringComparison.OrdinalIgnoreCase));
-            Role? f = First(es);
+            RoleType? f = First(es);
             return f;
         }
 
-        public static string ToCode(Role? e)
+        public static string ToCode(RoleType? e)
         {
             return e?.Attribute<RoleInfoAttribute>().Code;
         }
 
-        private static Role? First(IEnumerable<Role> es)
+        private static RoleType? First(IEnumerable<RoleType> es)
         {
-            Role? e = null;
+            RoleType? e = null;
             e = es == null || es.Any() ? es.First() : e;
             return e;
         }

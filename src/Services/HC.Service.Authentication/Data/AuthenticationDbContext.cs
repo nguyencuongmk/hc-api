@@ -1,5 +1,5 @@
 ﻿using HC.Foundation.Data.Base;
-using HC.Foundation.Data.Entities;
+using HC.Service.Authentication.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace HC.Service.Authentication.Data

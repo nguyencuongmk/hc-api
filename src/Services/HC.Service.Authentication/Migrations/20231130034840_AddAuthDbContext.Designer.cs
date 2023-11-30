@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HC.Service.Authentication.Migrations
 {
     [DbContext(typeof(AuthenticationDbContext))]
-    [Migration("20231129101041_AddAuthDbContext")]
+    [Migration("20231130034840_AddAuthDbContext")]
     partial class AddAuthDbContext
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace HC.Service.Authentication.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.Role", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,24 +66,24 @@ namespace HC.Service.Authentication.Migrations
                             Id = 1,
                             Code = "ADM",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4231),
+                            CreatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5152),
                             Name = "Admin",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4245)
+                            UpdatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5173)
                         },
                         new
                         {
                             Id = 2,
                             Code = "CUS",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4248),
+                            CreatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5176),
                             Name = "Customer",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4249)
+                            UpdatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5177)
                         });
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.User", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,18 +142,18 @@ namespace HC.Service.Authentication.Migrations
                         {
                             Id = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4445),
+                            CreatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5378),
                             Email = "administrator@localhost.com",
                             EmailConfirmed = true,
                             IsLocked = false,
                             PasswordHash = "Q3VvbmdOTTExIQ==",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 29, 17, 10, 41, 180, DateTimeKind.Local).AddTicks(4446),
+                            UpdatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5379),
                             UserName = "Administrator"
                         });
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserToken", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.UserToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -219,9 +219,9 @@ namespace HC.Service.Authentication.Migrations
                         });
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserToken", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.UserToken", b =>
                 {
-                    b.HasOne("HC.Foundation.Data.Entities.User", "User")
+                    b.HasOne("HC.Service.Authentication.Entities.User", "User")
                         .WithMany("UserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -232,20 +232,20 @@ namespace HC.Service.Authentication.Migrations
 
             modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("HC.Foundation.Data.Entities.Role", null)
+                    b.HasOne("HC.Service.Authentication.Entities.Role", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HC.Foundation.Data.Entities.User", null)
+                    b.HasOne("HC.Service.Authentication.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.User", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.User", b =>
                 {
                     b.Navigation("UserTokens");
                 });

@@ -1,6 +1,6 @@
 ﻿using HC.Foundation.Data.Base;
 
-namespace HC.Foundation.Data.Entities
+namespace HC.Service.Authentication.Entities
 {
     public class User : BaseEntity
     {

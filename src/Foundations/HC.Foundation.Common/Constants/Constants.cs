@@ -17,7 +17,7 @@ namespace HC.Foundation.Common.Constants
             Modified
         }
 
-        public enum Role
+        public enum RoleType
         {
             [RoleInfo(Name = "Admin", Code = "ADM")]
             Admin,

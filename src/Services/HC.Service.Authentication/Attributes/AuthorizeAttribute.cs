@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using static HC.Foundation.Common.Constants.Constants;
 
-namespace HC.Service.Authentication
+namespace HC.Service.Authentication.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
-        private readonly IList<Role> _roles;
+        private readonly IList<RoleType> _roles;
 
-        public AuthorizeAttribute(params Role[] roles)
+        public AuthorizeAttribute(params RoleType[] roles)
         {
             _roles = roles ?? [];
         }
@@ -27,7 +27,7 @@ namespace HC.Service.Authentication
 
                 if (user == null || !user.Identity.IsAuthenticated)
                 {
-                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Constants.Message.TOKEN_INVALID);
+                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Message.TOKEN_INVALID);
 
                     context.Result = new JsonResult(response)
                     {
@@ -51,7 +51,7 @@ namespace HC.Service.Authentication
                 }
                 else
                 {
-                    var roleName = RoleInfoAttribute.ToName(Role.Admin);
+                    var roleName = RoleInfoAttribute.ToName(RoleType.Admin);
                     if (user.IsInRole(roleName))
                     {
                         isRolePermission = true;
@@ -60,7 +60,7 @@ namespace HC.Service.Authentication
 
                 if (!isRolePermission)
                 {
-                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Constants.Message.NO_PERMISSION);
+                    response = ApiResponse.GetResponseResult(response, StatusCodes.Status401Unauthorized, Message.NO_PERMISSION);
 
                     context.Result = new JsonResult(response)
                     {

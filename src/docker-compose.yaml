@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  hc-authentication-service:
+   image: hc.authentication.service:latest
+   container_name: hc-auth-service
+   build:
+    context: ./Services/HC.Service.Authentication
+    dockerfile: Dockerfile
+   environment: 
+    - ASPNETCORE_ENVIRONMENT=Development
+   ports:
+    - "4201:8081"
+  sql-server:
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: sql-server
+    ports:
+      - "1450:1433" 
+    environment:
+      - ACCEPT_EULA=y
+      - SA_PASSWORD=CuongNM11!
+    volumes:
+      - sql-server-volume:/var/opt/mssql
+volumes:
+  sql-server-volume:

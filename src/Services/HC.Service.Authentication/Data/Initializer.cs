@@ -1,4 +1,4 @@
-﻿using HC.Foundation.Data.Entities;
+﻿using HC.Service.Authentication.Entities;
 using HC.Service.Authentication.Helpers;
 using Microsoft.EntityFrameworkCore;
 

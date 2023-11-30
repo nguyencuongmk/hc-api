@@ -1,12 +1,14 @@
-﻿using AutoMapper;
-using HC.Foundation.Common.Attributes;
-using HC.Foundation.Data.Entities;
+﻿using HC.Foundation.Common.Attributes;
+using HC.Foundation.Common.Helpers;
 using HC.Service.Authentication.Data;
+using HC.Service.Authentication.Entities;
 using HC.Service.Authentication.Helpers;
 using HC.Service.Authentication.Models.Requests;
 using HC.Service.Authentication.Models.Responses;
 using HC.Service.Authentication.Services.IServices;
+using HC.Service.Authentication.Settings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Service.Authentication.Services
@@ -14,14 +16,12 @@ namespace HC.Service.Authentication.Services
     public class AuthService : IAuthService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        private readonly IJwtTokenGenerator _jwtTokenGenerator;
+        private readonly AppSettings _appSettings;
 
-        public AuthService(IUnitOfWork unitOfWork, IMapper mapper, IJwtTokenGenerator jwtTokenGenerator)
+        public AuthService(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _jwtTokenGenerator = jwtTokenGenerator;
+            _appSettings = appSettings.Value;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace HC.Service.Authentication.Services
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(roleName))
             {
-                message = Constants.Message.NOT_ENOUGH_INFO;
+                message = Message.NOT_ENOUGH_INFO;
                 return message;
             }
 
@@ -56,7 +56,7 @@ namespace HC.Service.Authentication.Services
             {
                 if (!await _unitOfWork.RoleRepository.IsExists(x => x.Name == roleName))
                 {
-                    message = Constants.Message.NOT_EXISTS_ROLE;
+                    message = Message.NOT_EXISTS_ROLE;
                     return message;
                 }
 
@@ -66,7 +66,7 @@ namespace HC.Service.Authentication.Services
                 {
                     if (user.Roles.Contains(role))
                     {
-                        message = Constants.Message.GRANTED_ROLE;
+                        message = Message.GRANTED_ROLE;
                         return message;
                     }
 
@@ -74,14 +74,14 @@ namespace HC.Service.Authentication.Services
 
                     if (!isRoleAdded)
                     {
-                        message = Constants.Message.ERROR_ADD_USER_ROLE;
+                        message = Message.ERROR_ADD_USER_ROLE;
                         return message;
                     }
                 }
             }
             else
             {
-                message = Constants.Message.NOT_EXISTS_USER;
+                message = Message.NOT_EXISTS_USER;
             }
 
             return message;
@@ -103,7 +103,7 @@ namespace HC.Service.Authentication.Services
 
             if (request == null || string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
             {
-                message = Constants.Message.NOT_ENOUGH_INFO;
+                message = Message.NOT_ENOUGH_INFO;
                 return (response, message);
             }
 
@@ -120,29 +120,29 @@ namespace HC.Service.Authentication.Services
 
             if (user == null || !isValid)
             {
-                message = Constants.Message.LOGIN_FAILED;
+                message = Message.LOGIN_FAILED;
                 return (response, message);
             }
 
             if (user.IsLocked)
             {
-                message = Constants.Message.ACCOUNT_LOCKED;
+                message = Message.ACCOUNT_LOCKED;
                 return (response, message);
             }
 
             if (!user.EmailConfirmed)
             {
-                message = Constants.Message.EMAIL_NOT_YET_CONFIRMED;
+                message = Message.EMAIL_NOT_YET_CONFIRMED;
                 return (response, message);
             }
 
             var roles = _unitOfWork.UserRepository.GetRoles(user);
-            var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, roles);
-            var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+            var accessToken = JwtHelper.GenerateAccessToken(user.Email, user.Id, user.UserName, _appSettings.JwtSettings.Issuer, _appSettings.JwtSettings.Audience, _appSettings.JwtSettings.Secret, roles);
+            var refreshToken = JwtHelper.GenerateRefreshToken();
 
             if (string.IsNullOrEmpty(accessToken.Item1) || string.IsNullOrEmpty(refreshToken.Item1))
             {
-                message = Constants.Message.LOGIN_FAILED;
+                message = Message.LOGIN_FAILED;
                 return (response, message);
             }
 
@@ -178,7 +178,7 @@ namespace HC.Service.Authentication.Services
 
                 if (userAccessToken == null || userRefreshToken == null)
                 {
-                    message = Constants.Message.LOGIN_FAILED;
+                    message = Message.LOGIN_FAILED;
                     return (response, message);
                 }
 
@@ -194,10 +194,10 @@ namespace HC.Service.Authentication.Services
             response.RefreshToken = refreshToken.Item1;
 
             return (response, message);
-            
+
             #endregion Business Logic
         }
-        
+
         /// <summary>
         /// Register an account
         /// </summary>
@@ -211,13 +211,13 @@ namespace HC.Service.Authentication.Services
 
             if (request == null || string.IsNullOrEmpty(request?.UserName) || string.IsNullOrEmpty(request?.Password) || string.IsNullOrEmpty(request?.Email))
             {
-                message = Constants.Message.NOT_ENOUGH_INFO;
+                message = Message.NOT_ENOUGH_INFO;
                 return message;
             }
 
             if (!EmailHelper.IsValidEmail(request.Email))
             {
-                message = Constants.Message.INVALID_EMAIL;
+                message = Message.INVALID_EMAIL;
                 return message;
             }
 
@@ -225,7 +225,7 @@ namespace HC.Service.Authentication.Services
 
             if (!canConnectDb)
             {
-                message = Constants.Message.CANNOT_CONNECT_DB;
+                message = Message.CANNOT_CONNECT_DB;
                 return message;
             }
 
@@ -249,17 +249,17 @@ namespace HC.Service.Authentication.Services
 
                     if (!isUserCreated)
                     {
-                        message = Constants.Message.ERROR_CREATE_USER;
+                        message = Message.ERROR_CREATE_USER;
                         return message;
                     }
 
-                    var roleCode = RoleInfoAttribute.ToCode(Foundation.Common.Constants.Constants.Role.Customer);
+                    var roleCode = RoleInfoAttribute.ToCode(Foundation.Common.Constants.Constants.RoleType.Customer);
                     var role = await _unitOfWork.RoleRepository.FindSingle(x => x.Code == roleCode && x.Status != Status.Deleted);
                     var isRoleAdded = await _unitOfWork.UserRepository.AddToRoleAsync(user, role);
 
                     if (!isRoleAdded)
                     {
-                        message = Constants.Message.ERROR_CREATE_USER;
+                        message = Message.ERROR_CREATE_USER;
                         return message;
                     }
 

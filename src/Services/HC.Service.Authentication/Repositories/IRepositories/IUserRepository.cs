@@ -1,5 +1,5 @@
 ﻿using HC.Foundation.Data.Base.IBase;
-using HC.Foundation.Data.Entities;
+using HC.Service.Authentication.Entities;
 
 namespace HC.Service.Authentication.Repositories.IRepositories
 {

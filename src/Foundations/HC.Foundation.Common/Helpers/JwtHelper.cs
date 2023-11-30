@@ -1,35 +1,24 @@
-﻿using HC.Foundation.Data.Entities;
-using HC.Service.Authentication.Services.IServices;
-using HC.Service.Authentication.Settings;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace HC.Service.Authentication.Services
+namespace HC.Foundation.Common.Helpers
 {
-    public class JwtTokenGenerator : IJwtTokenGenerator
+    public class JwtHelper
     {
-        private readonly AppSettings _appSettings;
-
-        public JwtTokenGenerator(IOptions<AppSettings> appSettings)
-        {
-            _appSettings = appSettings.Value;
-        }
-
-        public (string, DateTime) GenerateAccessToken(User user, IEnumerable<string> roles)
+        public static (string, DateTime) GenerateAccessToken(string email, int userId, string username, string issuer, string audience, string secretKey, IEnumerable<string> roles)
         {
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.UTF8.GetBytes(_appSettings.JwtSettings.Secret);
+                var key = Encoding.UTF8.GetBytes(secretKey);
                 var claimList = new List<Claim>
                 {
-                    new(JwtRegisteredClaimNames.Email,user.Email),
-                    new(JwtRegisteredClaimNames.Sub,user.Id.ToString()),
-                    new(JwtRegisteredClaimNames.Name,user.UserName)
+                    new(JwtRegisteredClaimNames.Email, email),
+                    new(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                    new(JwtRegisteredClaimNames.Name, username)
                 };
 
                 claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
@@ -37,8 +26,8 @@ namespace HC.Service.Authentication.Services
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Audience = _appSettings.JwtSettings.Audience,
-                    Issuer = _appSettings.JwtSettings.Issuer,
+                    Audience = audience,
+                    Issuer = issuer,
                     Subject = new ClaimsIdentity(claimList),
                     Expires = expires,
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
@@ -53,7 +42,7 @@ namespace HC.Service.Authentication.Services
             }
         }
 
-        public (string, DateTime) GenerateRefreshToken()
+        public static (string, DateTime) GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
             var expires = DateTime.Now.AddHours(7);
@@ -65,7 +54,7 @@ namespace HC.Service.Authentication.Services
             }
         }
 
-        public ClaimsPrincipal ValidateToken(string accessToken)
+        public static ClaimsPrincipal ValidateToken(string accessToken, string issuer, string audience, string secretKey)
         {
             try
             {
@@ -75,17 +64,17 @@ namespace HC.Service.Authentication.Services
                 if (jwtToken == null)
                     return null;
 
-                var symmetricKey = Encoding.UTF8.GetBytes(_appSettings.JwtSettings.Secret);
+                var symmetricKey = Encoding.UTF8.GetBytes(secretKey);
                 var validationParameters = new TokenValidationParameters()
                 {
                     RequireExpirationTime = true,
                     ValidateIssuer = true,
-                    ValidIssuer = _appSettings.JwtSettings.Issuer,
+                    ValidIssuer = issuer,
                     IssuerSigningKey = new SymmetricSecurityKey(symmetricKey),
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.FromMinutes(0),
                     ValidateAudience = true,
-                    ValidAudience = _appSettings.JwtSettings.Audience,
+                    ValidAudience = audience,
                 };
 
                 var principal = jwtTokenHandler.ValidateToken(accessToken, validationParameters, out SecurityToken validateToken);

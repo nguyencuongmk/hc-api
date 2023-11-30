@@ -1,4 +1,5 @@
 ﻿using HC.Foundation.Common;
+using HC.Service.Authentication.Attributes;
 using HC.Service.Authentication.Models.Requests;
 using HC.Service.Authentication.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace HC.Service.Authentication.Controllers
         /// <param name="username"></param>
         /// <param name="roleName"></param>
         /// <returns></returns>
-        [Authorize(Role.Admin)]
+        [Authorize(RoleType.Admin)]
         [HttpPost("assignment-role")]
         public async Task<IActionResult> RoleAssignment(string username, string roleName)
         {
@@ -68,10 +69,10 @@ namespace HC.Service.Authentication.Controllers
         {
             var response = new ApiResponse();
             var currentUser = HttpContext.User;
-            
+
             if (currentUser != null && currentUser.Identity.IsAuthenticated)
             {
-                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, Constants.Message.ACCOUNT_LOCKED);
+                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, Message.LOGGED_IN);
                 return BadRequest(response);
             }
 
@@ -85,6 +86,14 @@ namespace HC.Service.Authentication.Controllers
 
             response.Data = loginResponse.Item1;
 
+            return Ok(response);
+        }
+
+        [HttpGet("get")]
+        public IActionResult GetInfo()
+        {
+            var response = new ApiResponse();
+            response.Result.Description = "Hello";
             return Ok(response);
         }
     }
