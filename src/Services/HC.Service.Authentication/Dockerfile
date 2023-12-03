@@ -8,6 +8,8 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+COPY ["Foundations/HC.Foundation.Common/HC.Foundation.Common.csproj", "Foundations/HC.Foundation.Common/"]
+COPY ["Foundations/HC.Foundation.Data/HC.Foundation.Data.csproj", "Foundations/HC.Foundation.Data/"]
 COPY ["Services/HC.Service.Authentication/HC.Service.Authentication.csproj", "Services/HC.Service.Authentication/"]
 RUN dotnet restore "Services/HC.Service.Authentication/HC.Service.Authentication.csproj"
 COPY . .

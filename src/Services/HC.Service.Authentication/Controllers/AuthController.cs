@@ -1,7 +1,9 @@
-﻿using HC.Foundation.Cormmon;
+﻿using HC.Foundation.Common;
+using HC.Service.Authentication.Attributes;
 using HC.Service.Authentication.Models.Requests;
 using HC.Service.Authentication.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using static HC.Foundation.Common.Constants.Constants;
 
 namespace HC.Service.Authentication.Controllers
 {
@@ -32,6 +34,66 @@ namespace HC.Service.Authentication.Controllers
                 return BadRequest(response);
             }
 
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Admin assign Role to User
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
+        [Authorize(RoleType.Admin)]
+        [HttpPost("assignment-role")]
+        public async Task<IActionResult> RoleAssignment(string username, string roleName)
+        {
+            var response = new ApiResponse();
+            var errorMessage = await _authService.AssignRole(username, roleName);
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, errorMessage);
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Login User
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        {
+            var response = new ApiResponse();
+            var currentUser = HttpContext.User;
+
+            if (currentUser != null && currentUser.Identity.IsAuthenticated)
+            {
+                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, Message.LOGGED_IN);
+                return BadRequest(response);
+            }
+
+            var loginResponse = await _authService.Login(request);
+
+            if (!string.IsNullOrEmpty(loginResponse.Item2))
+            {
+                response = ApiResponse.GetResponseResult(response, StatusCodes.Status400BadRequest, loginResponse.Item2);
+                return BadRequest(response);
+            }
+
+            response.Data = loginResponse.Item1;
+
+            return Ok(response);
+        }
+
+        [HttpGet("get")]
+        public IActionResult GetInfo()
+        {
+            var response = new ApiResponse();
+            response.Result.Description = "Hello";
             return Ok(response);
         }
     }

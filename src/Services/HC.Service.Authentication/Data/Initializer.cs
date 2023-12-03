@@ -1,4 +1,4 @@
-﻿using HC.Foundation.Data.Entities;
+﻿using HC.Service.Authentication.Entities;
 using HC.Service.Authentication.Helpers;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +20,7 @@ namespace HC.Service.Authentication.Data
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
                     CreatedBy = "system",
-                    Status = Foundation.Core.Constants.Constants.Status.Created
+                    Status = Foundation.Common.Constants.Constants.Status.Created
                 },
                 new Role
                 {
@@ -30,7 +30,7 @@ namespace HC.Service.Authentication.Data
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
                     CreatedBy = "system",
-                    Status = Foundation.Core.Constants.Constants.Status.Created
+                    Status = Foundation.Common.Constants.Constants.Status.Created
                 }
             );
 
@@ -46,12 +46,12 @@ namespace HC.Service.Authentication.Data
                     UserName = "Administrator",
                     Email = "administrator@localhost.com",
                     EmailConfirmed = true,
-                    PasswordHash = PasswordHelper.EncodePasswordToBase64("CuongNM11!").Item2,
-                    IsActive = true,
+                    PasswordHash = PasswordHelper.EncodePasswordToBase64("CuongNM11!"),
+                    IsLocked = false,
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
                     CreatedBy = "system",
-                    Status = Foundation.Core.Constants.Constants.Status.Created
+                    Status = Foundation.Common.Constants.Constants.Status.Created
                 }
             );
 
@@ -59,19 +59,20 @@ namespace HC.Service.Authentication.Data
 
             #region UserRole
 
-            builder.Entity<UserRole>().HasData
-            (
-                new UserRole
-                {
-                    Id = 1,
-                    UserId = 1,
-                    RoleId = 1,
-                    CreatedOn = DateTime.Now,
-                    UpdatedOn = DateTime.Now,
-                    CreatedBy = "system",
-                    Status = Foundation.Core.Constants.Constants.Status.Created
-                }
-            );
+            builder.Entity("RoleUser").HasData( new Dictionary<string, object> { ["UsersId"] = 1, ["RolesId"] = 1 });
+            //builder.Entity<UserRole>().HasData
+            //(
+            //    new UserRole
+            //    {
+            //        Id = 1,
+            //        UserId = 1,
+            //        RoleId = 1,
+            //        CreatedOn = DateTime.Now,
+            //        UpdatedOn = DateTime.Now,
+            //        CreatedBy = "system",
+            //        Status = Foundation.Common.Constants.Constants.Status.Created
+            //    }
+            //);
 
             #endregion UserRole
         }

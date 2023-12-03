@@ -1,6 +1,6 @@
-﻿using HC.Service.Authentication.Models;
-using HC.Service.Authentication.Repositories;
+﻿using HC.Service.Authentication.Repositories;
 using HC.Service.Authentication.Repositories.IRepositories;
+using HC.Service.Authentication.Settings;
 using Microsoft.Extensions.Options;
 
 namespace HC.Service.Authentication.Data
@@ -10,12 +10,13 @@ namespace HC.Service.Authentication.Data
         private readonly AuthenticationDbContext _context;
         private IUserRepository _userRepository;
         private IRoleRepository _roleRepository;
-        private IOptions<JwtOptions> _jwtOptions;
+        private IUserTokenRepository _userTokenRepository;
+        private IOptions<AppSettings> _appSettings;
 
-        public UnitOfWork(AuthenticationDbContext context, IOptions<JwtOptions> jwtOptions)
+        public UnitOfWork(AuthenticationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
-            _jwtOptions = jwtOptions;
+            _appSettings = appSettings;
         }
 
         public AuthenticationDbContext Context => _context;
@@ -24,7 +25,7 @@ namespace HC.Service.Authentication.Data
         {
             get
             {
-                _userRepository ??= new UserRepository(_context, _jwtOptions);
+                _userRepository ??= new UserRepository(_context, _appSettings);
                 return _userRepository;
             }
         }
@@ -38,25 +39,16 @@ namespace HC.Service.Authentication.Data
             }
         }
 
-        public void Dispose() => _context.Dispose();
-
-        public async Task<bool> SaveChangesAsync()
+        public IUserTokenRepository UserTokenRepository
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            get
             {
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                    return true;
-                }
-                catch (Exception)
-                {
-                    await transaction.RollbackAsync();
-                    return false;
-                }
+                _userTokenRepository ??= new UserTokenRepository(_context);
+                return _userTokenRepository;
             }
         }
+
+        public void Dispose() => _context.Dispose();
     }
 
     public interface IUnitOfWork : IDisposable
@@ -65,8 +57,8 @@ namespace HC.Service.Authentication.Data
 
         IRoleRepository RoleRepository { get; }
 
-        AuthenticationDbContext Context { get; }
+        IUserTokenRepository UserTokenRepository { get; }
 
-        Task<bool> SaveChangesAsync();
+        AuthenticationDbContext Context { get; }
     }
 }

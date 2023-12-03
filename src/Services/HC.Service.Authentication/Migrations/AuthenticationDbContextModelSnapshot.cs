@@ -22,10 +22,13 @@ namespace HC.Service.Authentication.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.Role", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -60,27 +63,30 @@ namespace HC.Service.Authentication.Migrations
                             Id = 1,
                             Code = "ADM",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7887),
+                            CreatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5152),
                             Name = "Admin",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7901)
+                            UpdatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5173)
                         },
                         new
                         {
                             Id = 2,
                             Code = "CUS",
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7903),
+                            CreatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5176),
                             Name = "Customer",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(7904)
+                            UpdatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5177)
                         });
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.User", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.User", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -98,7 +104,7 @@ namespace HC.Service.Authentication.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
                     b.Property<string>("PasswordHash")
@@ -119,9 +125,12 @@ namespace HC.Service.Authentication.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("Users");
 
@@ -130,67 +139,32 @@ namespace HC.Service.Authentication.Migrations
                         {
                             Id = 1,
                             CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8055),
+                            CreatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5378),
                             Email = "administrator@localhost.com",
                             EmailConfirmed = true,
-                            IsActive = true,
+                            IsLocked = false,
                             PasswordHash = "Q3VvbmdOTTExIQ==",
                             Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8056),
+                            UpdatedOn = new DateTime(2023, 11, 30, 10, 48, 39, 740, DateTimeKind.Local).AddTicks(5379),
                             UserName = "Administrator"
                         });
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 1,
-                            CreatedBy = "system",
-                            CreatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8074),
-                            Status = 1,
-                            UpdatedOn = new DateTime(2023, 11, 25, 13, 40, 16, 62, DateTimeKind.Local).AddTicks(8075)
-                        });
-                });
-
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserToken", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.UserToken", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiredTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
@@ -220,28 +194,31 @@ namespace HC.Service.Authentication.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserRole", b =>
+            modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.HasOne("HC.Foundation.Data.Entities.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
 
-                    b.HasOne("HC.Foundation.Data.Entities.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
 
-                    b.Navigation("Role");
+                    b.HasKey("RolesId", "UsersId");
 
-                    b.Navigation("User");
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("RoleUser");
+
+                    b.HasData(
+                        new
+                        {
+                            RolesId = 1,
+                            UsersId = 1
+                        });
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.UserToken", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.UserToken", b =>
                 {
-                    b.HasOne("HC.Foundation.Data.Entities.User", "User")
+                    b.HasOne("HC.Service.Authentication.Entities.User", "User")
                         .WithMany("UserTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -250,15 +227,23 @@ namespace HC.Service.Authentication.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.Role", b =>
+            modelBuilder.Entity("RoleUser", b =>
                 {
-                    b.Navigation("UserRoles");
+                    b.HasOne("HC.Service.Authentication.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HC.Service.Authentication.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("HC.Foundation.Data.Entities.User", b =>
+            modelBuilder.Entity("HC.Service.Authentication.Entities.User", b =>
                 {
-                    b.Navigation("UserRoles");
-
                     b.Navigation("UserTokens");
                 });
 #pragma warning restore 612, 618

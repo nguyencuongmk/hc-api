@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using HC.Service.Authentication.Models.DTOs;
-using HC.Service.Authentication.Models.Requests;
 
 namespace HC.Service.Authentication.Mappings
 {
@@ -8,7 +6,6 @@ namespace HC.Service.Authentication.Mappings
     {
         public Maps()
         {
-            CreateMap<RegisterRequest, RegisterDTO>();
         }
     }
 }
