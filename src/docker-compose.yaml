@@ -1,24 +1,43 @@
 version: '3.9'
 services:
   hc-authentication-service:
-   image: hc.authentication.service:latest
+   hostname: hc-authentication.local
+   image: ${DOCKER_REGISTRY-}hc.authentication.service
    container_name: hc-auth-service
-   build:
-    context: ./Services/HC.Service.Authentication
-    dockerfile: Dockerfile
-   environment: 
-    - ASPNETCORE_ENVIRONMENT=Development
    ports:
+    - "4200:8080"
     - "4201:8081"
+   build:
+    context: .
+    dockerfile: Services/HC.Service.Authentication/Dockerfile
+   environment: 
+    ASPNETCORE_ENVIRONMENT: Development
+    ASPNETCORE_URLS: "https://+:8081;http://+:8080"
+    ASPNETCORE_Kestrel__Certificates__Default__Password: "CuongNM11!"
+    ASPNETCORE_Kestrel__Certificates__Default__Path: /https/hc-api-cert.pfx
+   volumes: 
+      - ~/.aspnet/https:/https:ro
+   networks:
+      network-name:
+        aliases:
+          - api-server-name
+   depends_on: 
+    - sql-server  
   sql-server:
     image: "mcr.microsoft.com/mssql/server"
     container_name: sql-server
     ports:
       - "1450:1433" 
     environment:
-      - ACCEPT_EULA=y
-      - SA_PASSWORD=CuongNM11!
+      MSSQL_SA_PASSWORD: CuongNM11!
+      ACCEPT_EULA: Y
     volumes:
       - sql-server-volume:/var/opt/mssql
+    networks:
+      network-name:
+        aliases:
+          - api-server-name
 volumes:
   sql-server-volume:
+networks:
+  network-name: {}
