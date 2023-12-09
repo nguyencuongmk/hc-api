@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Foundations\HC.Foundation.Data\HC.Foundation.Data.csproj" />
+    <ProjectReference Include="..\..\Foundations\HC.Foundation.MessageBus\HC.Foundation.MessageBus.csproj" />
   </ItemGroup>
 
 </Project>

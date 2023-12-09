@@ -1,4 +1,6 @@
+using HC.Foundation.MessageBus.IoC;
 using HC.Service.Authentication.Data;
+using HC.Service.Authentication.Entities;
 using HC.Service.Authentication.Mappings;
 using HC.Service.Authentication.Middlewares;
 using HC.Service.Authentication.Repositories;
@@ -7,6 +9,7 @@ using HC.Service.Authentication.Services;
 using HC.Service.Authentication.Services.IServices;
 using HC.Service.Authentication.Settings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 
 public class Program
@@ -50,10 +53,18 @@ public class Program
         });
 
         // Config AppSettings
-        builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+        var appSettingsSection = builder.Configuration.GetSection("AppSettings");
+        builder.Services.Configure<AppSettings>(appSettingsSection);
+        var appSettings = appSettingsSection.Get<AppSettings>();
 
         // Routing
         builder.Services.AddRouting(options => options.LowercaseUrls = true);
+        
+        // Kafka Message Bus
+        builder.Services.AddKafkaMessageBus(config =>
+        {
+            config.BootstrapServers = "localhost:9092";
+        });
 
         #region Dependency Injection
 

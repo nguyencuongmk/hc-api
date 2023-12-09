@@ -1,5 +1,6 @@
 ﻿using HC.Foundation.Common.Attributes;
 using HC.Foundation.Common.Helpers;
+using HC.Foundation.MessageBus;
 using HC.Service.Authentication.Data;
 using HC.Service.Authentication.Entities;
 using HC.Service.Authentication.Helpers;
@@ -17,11 +18,13 @@ namespace HC.Service.Authentication.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppSettings _appSettings;
+        private readonly IKafkaMessageBus _bus;
 
-        public AuthService(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings)
+        public AuthService(IUnitOfWork unitOfWork, IOptions<AppSettings> appSettings, IKafkaMessageBus bus)
         {
             _unitOfWork = unitOfWork;
             _appSettings = appSettings.Value;
+            _bus = bus;
         }
 
         /// <summary>
@@ -271,6 +274,11 @@ namespace HC.Service.Authentication.Services
                     message = ex.Message;
                     return message;
                 }
+            }
+
+            if (string.IsNullOrEmpty(message))
+            {
+                await _bus.PublishAsync("register",user.Email);
             }
 
             return message;
